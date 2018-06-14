@@ -11,11 +11,20 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 
 import App from './App';
 
-const AppWithRouter = () => (
-    <BrowserRouter>
-        <App/>
-    </BrowserRouter>
-)
+import Home from './containers/Home/Home.js';
+import Login from './containers/Login/Login.js';
 
-ReactDOM.render(<AppWithRouter />, document.getElementById('root'));
+// Containers(or pages)
+const history = createBrowserHistory();
+
+
+ReactDOM.render((
+    <BrowserRouter history={history}>
+        <Switch>
+            <Route path="/login" name="Login" component={Login} />
+            <Route path="/" name="Home" component={Home} />
+            <Route component={Login} />
+        </Switch>
+    </BrowserRouter>
+), document.getElementById('root'));
 registerServiceWorker();

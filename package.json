@@ -7,6 +7,7 @@
     "@coreui/react": "^2.0.1",
     "bootstrap": "^4.1.1",
     "bulma": "^0.7.1",
+    "coreui.io": "^1.0.0-alpha.6",
     "react": "^16.4.1",
     "react-dom": "^16.4.1",
     "react-scripts": "1.1.4",

@@ -1,50 +1,198 @@
 import React, { Component } from 'react';
-
+import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
+import { Form } from 'reactstrap';
+import image from '../../background-1.jpg'
 class Login extends Component {
-    
+    constructor(props) {
+        super(props);
+        this.state = {
+            regisData: {
+                username: '',
+                password: '',
+                passwordConfirm: '',
+                email: ''
+            },
+            regisValidate: {
+                username: false,
+                password: false,
+                passwordConfirm: false,
+                email: false
+            },
+            loginData: {
+                username: '',
+                password: ''
+            },
+            validLogin: null,
+            registerMsg: '',
+            loginMsg: '',
+            register: false
+        }
+    }
+
+    toggle = (e) => {
+        this.setState({
+            register: !this.state.register
+        });
+    }
+
+    handleRegister = (e) => {
+        e.preventDefault();
+        let completed = false;
+        const regisData = this.state.regisData;
+        const regisValidate = this.state.regisValidate;
+
+        Object.keys(regisData).forEach((keys) => {
+            if(regisData[keys] === '') {
+                regisValidate[keys] = false;
+                completed = false;
+                this.setState({
+                    registerMsg: 'Form is incompleted.'
+                });
+            } else {
+                regisValidate[keys] = true;
+                completed = true;
+            }
+        });
+        this.setState({
+            regisValidate: this.regisValidate
+        });
+        console.log(regisValidate);
+
+        if(completed && regisData.password !== regisData.passwordConfirm) {
+            this.setState({
+                registerMsg: 'Password is not match.'
+            });
+            completed = false;
+        }
+        
+        // Waiting for edit with server
+        if(completed) {
+            console.log(this.state.regisData);
+        } else {
+            return ;
+        }
+    }
+
+    // Wating for edit with server
+    handleLogin = (e) => {
+        e.preventDefault();
+        let completed = false;
+        if(this.state.loginData.password && this.state.loginData.username) {
+            console.log(this.state.loginData);
+            completed = true;
+            this.setState({
+                loginMsg: ''
+            });
+        } else {
+            this.setState({
+                loginMsg: 'Form is incompleted.'
+            });
+        }
+        
+    }
+
+    updateRegis(key, value) {
+        this.setState((prev) => {
+            prev.regisData[key] = value;
+            return prev;
+        })
+    }
+
+    updateLogin(key, value) {
+        this.setState((prev) => {
+            prev.loginData[key] = value;
+            return prev;
+        })
+    }
 
     render() {
+        var background = {
+            backgroundImage: 'url('+image+')',
+            height: 'auto',
+            width: '100%',
+            position: 'fixed'
+        };
         return (
-            <div class="app flex-row align-items-center pace-done">
-                <div class="container">
-                    <div class="row justify-content-center">
-                        <div class="card-group">
-                            <div class="card p-4" style={{ padding: 20 }}>
+            <div className="app flex-row align-items-center pace-done" style={background}>
+                <div className="container">
 
-                                <div class="card-body">
-                                    <h1>Login</h1>
-                                    <p class="text-muted">Sign In to your account</p>
+                    <Modal isOpen={this.state.register} toggle={this.toggle} class="col">
+                        <ModalHeader toggle={this.toggle}>Registration Form</ModalHeader>
+                        <ModalBody>
+                            <Form autoComplete="off" onSubmit={this.handleRegister}>
+                                <div class="input-group mb-4">
+                                    <div class="input-group-prepend">
+                                        <input value={this.state.regisData.username} onChange={(e) => this.updateRegis('username', e.target.value)} type="text" className="form-control" placeholder="Username" />
+                                    </div>
+                                </div>
+                                <div class="input-group mb-4">
+                                    <div class="input-group-prepend">
+                                        <input value={this.state.regisData.password} onChange={(e) => this.updateRegis('password', e.target.value)}type="password" className="form-control" placeholder="Password" />
+                                    </div>
+                                </div>
+                                <div class="input-group mb-4">
+                                    <div class="input-group-prepend">
+                                        <input value={this.state.regisData.passwordConfirm} onChange={(e) => this.updateRegis('passwordConfirm', e.target.value)}type="password" className="form-control" placeholder="Confirm Password" />
+                                    </div>
+                                </div>
+                                <div class="input-group mb-4">
+                                    <div class="input-group-prepend">
+                                        <input value={this.state.regisData.email} onChange={(e) => this.updateRegis('email', e.target.value)} type="text" className="form-control" placeholder="Email" />
+                                    </div>
+                                </div>
+                            </Form>
+                        </ModalBody>
+                        <ModalFooter>
+                            {
+                                this.state.registerMsg === "" ? "" :
+                                <div style={{ marginRight: 16 }}>
+                                    {this.state.registerMsg}
+                                </div>
+                            }
+                            <div>
+                                <button type="button" onClick={this.handleRegister} className="btn btn-primary">Register</button>
+                            </div>
+                        </ModalFooter>
+                    </Modal>
+
+                    <div className="row justify-content-center">
+                        <div className="card-group">
+                            <div className="card p-4" style={{ padding: 20 }}>
+
+                                <div className="card-body">
+                                    <h1>Log In</h1>
+                                    <p className="text-muted">Sign In to your account</p>
 
                                     <form>
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <input type="text" class="form-control" placeholder="Username" />
+                                        <div className="input-group mb-3">
+                                            <div className="input-group-prepend">
+                                                <input type="text" value={this.state.loginData.username} onChange={(e) => { this.updateLogin('username', e.target.value)}} className="form-control" placeholder="Username" />
                                             </div>
                                         </div>
-                                        <div class="input-group mb-3">
-                                            <div class="input-group-prepend">
-                                                <input type="password" class="form-control" placeholder="Password" />
+                                        <div className="input-group mb-3">
+                                            <div className="input-group-prepend">
+                                                <input type="password" value={this.state.loginData.pasword} onChange={(e) => { this.updateLogin('password', e.target.value)}} className="form-control" placeholder="Password" />
                                             </div>
                                         </div>
-
-                                        <div class="row">
-                                            <div class="col-6">
-                                                <button type="button" class="btn btn-primary px-4">Login</button>
+                                        { this.state.loginMsg ? <p>{ this.state.loginMsg}</p> : '' }
+                                        <div className="row">
+                                            <div className="col-6">
+                                                <button onClick={this.handleLogin} type="button" className="btn btn-primary px-4">Login</button>
                                             </div>
-
-                                            <div class="col-6 text-right">
-                                            <button type="button" class="btn btn-link px-0">Register</button>
+                                            <div className="col-6">
+                                                <Button color="link" onClick={this.toggle}>Register</Button>
                                             </div>
                                         </div>
                                     </form>
                                 </div>
                             </div>
-                            <div class="card p-4 bg-dark text-light" style={{ padding: 20 }}>
 
-                                <div class="card-body">
+                            <div className="card p-4 bg-dark text-light" style={{ padding: 20 }}>
+
+                                <div className="card-body">
                                     <h1>JustCodeIt!</h1>
-                                    <p>Grader during construction, cyka blyat.</p>
-                                    <p class="text-danger">Proceed with caution</p>
+                                    <p>Grader for Computer Engineering, cyka blyat</p>
+                                    <p className="text-danger">During construction. Proceed with caution</p>
                                 </div>
                             </div>
                         </div>

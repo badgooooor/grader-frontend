@@ -25,25 +25,25 @@ class Header extends Component {
 
   render() {
     return (
-      <header>
-        <Navbar color="dark" expand="md">
-          <NavbarBrand>CEGrader</NavbarBrand>
-
+      <div>
+        <Navbar color="dark" light expand="md">
+          <NavbarBrand className="text-light" href="/">JustCodeIt!</NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
+          <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink href="/dashboard/">Dashboard</NavLink>
+                <NavLink className="text-light" href="/dashboard/">Dashboard</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="/problems/">Problem</NavLink>
+                <NavLink className="text-light" href="/problems/">Problems</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink href="/logout">Logout</NavLink>
+                <NavLink className="text-light" href="/logout/">Logout</NavLink>
               </NavItem>
             </Nav>
-
+          </Collapse>
         </Navbar>
-      </header>
+      </div>
     )
   }
 }

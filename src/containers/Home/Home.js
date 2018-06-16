@@ -14,9 +14,10 @@ class Home extends Component {
                 <Header/>
                 <div className="main">
                     <div className="container-fluid">
-                        <Switch>                            
+                        <Switch>              
                             <Route exact path="/home/dashboard" name="Dashboard" component={Dashboard} />
                             <Route path="/home/problems" component={ProblemList}/>
+                            <Route path="/" component={Dashboard} />
                             <Redirect from="/" to="/home" />             
                         </Switch>
                     </div>

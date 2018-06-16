@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { Button, Modal, ModalHeader, ModalBody, ModalFooter } from 'reactstrap';
 import { Form } from 'reactstrap';
 import image from '../../background-1.jpg'
+import Axios from 'axios';
+import swal from 'sweetalert';
+
 class Login extends Component {
     constructor(props) {
         super(props);
@@ -38,8 +41,11 @@ class Login extends Component {
     handleRegister = (e) => {
         e.preventDefault();
         let completed = false;
-        const regisData = this.state.regisData;
-        const regisValidate = this.state.regisValidate;
+        var regisData = this.state.regisData;
+        var regisValidate = this.state.regisValidate;
+        
+        // console.log(regisValidate);
+        // console.log(regisData);
 
         Object.keys(regisData).forEach((keys) => {
             if(regisData[keys] === '') {
@@ -53,10 +59,12 @@ class Login extends Component {
                 completed = true;
             }
         });
-        this.setState({
-            regisValidate: this.regisValidate
-        });
-        console.log(regisValidate);
+
+        // console.log(regisValidate);
+        
+        // this.setState({
+        //     regisValidate: this.regisValidate
+        // });
 
         if(completed && regisData.password !== regisData.passwordConfirm) {
             this.setState({
@@ -67,7 +75,18 @@ class Login extends Component {
         
         // Waiting for edit with server
         if(completed) {
-            console.log(this.state.regisData);
+            Axios.post('http://127.0.0.1:3333/add_users', {
+                username: regisData.username,
+                password: regisData.password,
+                email: regisData.email
+            }).then( (res) => {
+                console.log('Success');
+            }).catch( (err) => {
+                console.log('Error');
+            });
+            swal("Successful!", "You clicked the button!", "success");
+            this.toggle();
+            // (TODO) add auto login
         } else {
             return ;
         }

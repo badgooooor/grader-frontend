@@ -3,7 +3,6 @@ import ReactDOM from 'react-dom';
 import registerServiceWorker from './registerServiceWorker';
 import { BrowserRouter, Route, Switch } from 'react-router-dom'
 import { createBrowserHistory } from 'history';
-import { axios } from 'axios';
 
 // Main.
 import './index.css';
@@ -15,7 +14,15 @@ import '@coreui/icons/css/coreui-icons.min.css';
 import Home from './containers/Home/Home.js';
 import Login from './containers/Login/Login.js';
 
+// Backend 
 
+
+
+
+// Containers(or pages)
+const history = createBrowserHistory();
+
+// Render page
 ReactDOM.render((
     <BrowserRouter>
         <Switch>

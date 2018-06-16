@@ -120,21 +120,25 @@ class Login extends Component {
                         <ModalHeader toggle={this.toggle}>Registration Form</ModalHeader>
                         <ModalBody>
                             <Form autoComplete="off" onSubmit={this.handleRegister}>
+                                Username
                                 <div class="input-group mb-4">
                                     <div class="input-group-prepend">
                                         <input value={this.state.regisData.username} onChange={(e) => this.updateRegis('username', e.target.value)} type="text" className="form-control" placeholder="Username" />
                                     </div>
                                 </div>
+                                Password
                                 <div class="input-group mb-4">
                                     <div class="input-group-prepend">
                                         <input value={this.state.regisData.password} onChange={(e) => this.updateRegis('password', e.target.value)}type="password" className="form-control" placeholder="Password" />
                                     </div>
                                 </div>
+                                Confirm Password
                                 <div class="input-group mb-4">
                                     <div class="input-group-prepend">
                                         <input value={this.state.regisData.passwordConfirm} onChange={(e) => this.updateRegis('passwordConfirm', e.target.value)}type="password" className="form-control" placeholder="Confirm Password" />
                                     </div>
                                 </div>
+                                Email
                                 <div class="input-group mb-4">
                                     <div class="input-group-prepend">
                                         <input value={this.state.regisData.email} onChange={(e) => this.updateRegis('email', e.target.value)} type="text" className="form-control" placeholder="Email" />

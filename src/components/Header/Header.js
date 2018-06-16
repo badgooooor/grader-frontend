@@ -8,6 +8,7 @@ import {
   NavItem,
   NavLink,
 } from 'reactstrap';
+
 class Header extends Component {
   constructor(props) {
     super(props);
@@ -27,18 +28,18 @@ class Header extends Component {
     return (
       <div>
         <Navbar color="dark" light expand="md">
-          <NavbarBrand className="text-light" href="/">JustCodeIt!</NavbarBrand>
+          <NavbarBrand className="text-light">JustCodeIt!</NavbarBrand>
           <NavbarToggler onClick={this.toggle} />
           <Collapse isOpen={this.state.isOpen} navbar>
             <Nav className="ml-auto" navbar>
               <NavItem>
-                <NavLink className="text-light" href="/dashboard/">Dashboard</NavLink>
+                <NavLink className="text-light" href="/home/dashboard">Dashboard</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink className="text-light" href="/problems/">Problems</NavLink>
+                <NavLink className="text-light" href="/home/problems">Problems</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink className="text-light" href="/logout/">Logout</NavLink>
+                <NavLink className="text-light" href="/">Logout</NavLink>
               </NavItem>
             </Nav>
           </Collapse>

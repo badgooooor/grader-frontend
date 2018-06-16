@@ -13,18 +13,13 @@ import '@coreui/icons/css/coreui-icons.min.css';
 
 import Home from './containers/Home/Home.js';
 import Login from './containers/Login/Login.js';
-import Problems from './containers/ProblemList/ProblemList.js';
-
-// Containers(or pages)
-const history = createBrowserHistory();
 
 
 ReactDOM.render((
-    <BrowserRouter history={history}>
+    <BrowserRouter>
         <Switch>
-            <Route path="/problems" name="Problems" component={Problems} />
-            <Route path="/login" name="Login" component={Login} />
-            <Route path="/" name="Home" component={Home} />
+            <Route exact path="/login" component={Login} />
+            <Route path="/home" name="Home" component={Home} />
             <Route component={Login} />
         </Switch>
     </BrowserRouter>

@@ -4,6 +4,7 @@
   "private": true,
   "dependencies": {
     "@coreui/coreui": "^2.0.2",
+    "@coreui/icons": "^0.3.0",
     "@coreui/react": "^2.0.1",
     "bootstrap": "4.1.1",
     "bulma": "^0.7.1",

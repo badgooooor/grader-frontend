@@ -8,7 +8,7 @@ const lineDataStlye = {
         '1','2','3','4','5','6','7','8','9'
     ],
     datasets:[{
-        label: 'Passed Persons',
+        label: 'Passed',
         data: [10, 10, 8, 0, 0, 0, 0, 0, 0],
         backgroundColor: '#ff6384',
         borderColor: '#778899',
@@ -78,9 +78,31 @@ class Dashboard extends Component {
                 <div style={divStyleHightLine}/>
                     <div className="row ">
                         <div className="col-sm-6 col-md-5 col-lg-6">
+                            <div className="card">
+                                <div className="card-header">
+                                    <i className="fa fa-align-justify"></i> Username
+                                </div>
+                                <div className="card-body">
+                                <Doughnut data={this.state.douData} options={{ maintainAspectRatio: false, legend: { position: 'right' } }} width={this.props.width} height={262} />
+                                </div>
+                            </div>
+                        </div>
+                        <div className="col-sm-6 col-md-5 col-lg-6">
+                            <div className="card">
+                                <div className="card-header">
+                                    <i className="fa fa-align-justify"></i> Submission
+                                </div>
+                                <div className="card-body">
+                                    <Line data={this.state.lineData} options={{ responsive: true, maintainAspectRatio: false, legend: { position: 'right' } }} width={this.props.width} height={262} />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-sm-6 col-md-5 col-lg-6">
                             <div className="card" >
                                 <div className="card-header">
-                                    <i className="fa fa-align-justify"></i> Recently
+                                    <i className="fa fa-align-justify"></i> Recently Process
                                 </div>
                                 <div className="card-body">
                                     <div className="table-responsive" id="myDIV">
@@ -119,36 +141,50 @@ class Dashboard extends Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-sm-6 col-md-5 col-lg-6">
+                        <div className="col-sm-4 col-md-3 col-lg-4 ">
                             <div className="card">
                                 <div className="card-header">
-                                    <i className="fa fa-align-justify"></i> Count passed problem
+                                    <i className="fa fa-align-justify"></i> Personal passed task
                                 </div>
-                                <div className="card-body">
-                                    <Line data={this.state.lineData} options={{ responsive: true, maintainAspectRatio: false, legend: { position: 'right' } }} width={this.props.width} height={262} />
+                                <div className="card-body ">
+                                <Bar data={this.state.barData} options={{ maintainAspectRatio: false, legend: { position: 'right' } }} width={this.props.width} height={262} />
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div style={divStyleHightLine}/>
-                    <div className="row">
-                        <div className="col-sm-6 col-md-5 col-lg-6">
-                            <div className="card">
-                                <div className="card-header">
-                                    <i className="fa fa-align-justify"></i> Personal pass
+                        <div className="col-sm-2 col-md-2 col-lg-2">
+                            <div className="card" >
+                                <div className="card-header d-flex justify-content-center">
+                                    <i className="fal fa-align-center"></i> Top
                                 </div>
                                 <div className="card-body">
-                                <Bar data={this.state.barData} options={{ maintainAspectRatio: false, legend: { position: 'right' } }} width={300} height={300} />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-sm-6 col-md-5 col-lg-6">
-                            <div className="card">
-                                <div className="card-header">
-                                    <i className="fa fa-align-justify"></i> Personal processs
-                                </div>
-                                <div className="card-body">
-                                <Doughnut data={this.state.douData} options={{ maintainAspectRatio: false, legend: { position: 'right' } }} width={300} height={300} />
+                                    <div className="table-responsive" id="myDIV">
+                                        <table className="table table-striped">
+                                            <thead>
+                                                <tr>
+                                                    <th>User</th>
+                                                    <th><span class="cui-check"/></th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Franxx</td>
+                                                    <td>99</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Franxx</td>
+                                                    <td>99</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Franxx</td>
+                                                    <td>99</td>  
+                                                </tr>
+                                                <tr>
+                                                    <td>Franxx</td>
+                                                    <td>99</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
                         </div>

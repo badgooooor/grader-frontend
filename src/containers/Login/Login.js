@@ -75,17 +75,28 @@ class Login extends Component {
         
         // Waiting for edit with server
         if(completed) {
-            Axios.post('http://127.0.0.1:3333/add_users', {
+            Axios.post('http://127.0.0.1:3333/check_users', {
                 username: regisData.username,
                 password: regisData.password,
-                email: regisData.email
-            }).then( (res) => {
-                console.log('Success');
-            }).catch( (err) => {
-                console.log('Error');
-            });
-            swal("Successful!", "You clicked the button!", "success");
-            this.toggle();
+            }).then( (res) => { // duplicate
+                if(res.data == 'found'){
+                    swal("Username is available", "Please use another.", "warning");
+                    return ;
+                }else{
+                    Axios.get('http://127.0.0.1:3333/add_users', {
+                        username: regisData.username,
+                        password: regisData.password,
+                        email: regisData.email
+                    }).then( (res2) => {
+                        // console.log(res2);
+                        
+                        swal("Successful!", "You clicked the button!", "success");
+                        this.toggle();
+                    }).catch( (err) => {
+                        swal('Error', 'Error error', 'error');
+                    });
+                }
+            })
             // (TODO) add auto login
         } else {
             return ;
@@ -95,12 +106,17 @@ class Login extends Component {
     // Wating for edit with server
     handleLogin = (e) => {
         e.preventDefault();
-        let completed = false;
         if(this.state.loginData.password && this.state.loginData.username) {
-            console.log(this.state.loginData);
-            completed = true;
-            this.setState({
-                loginMsg: ''
+            // console.log(this.state.loginData);
+            Axios.post('http://127.0.0.1:3333/check_users', {
+                username: this.state.loginData.username,
+                password: this.state.loginData.password
+            }).then( (res) => {
+                swal("Login complete!", "go go go go!", "success");
+                this.props.history.push('/Home');
+            }).catch( (err) => {
+                swal("Not found", 'Username or Password was wrong!', "error");
+                // console.log('Error');
             });
         } else {
             this.setState({

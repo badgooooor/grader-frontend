@@ -77,7 +77,7 @@ class Dashboard extends Component {
                 <div className="container-fluid" >
                 <div style={divStyleHightLine}/>
                     <div className="row ">
-                        <div className="col-sm-6 col-md-5 col-lg-6">
+                        <div className="col-sm-4 col-md-4 col-lg-4">
                             <div className="card">
                                 <div className="card-header">
                                     <i className="fa fa-align-justify"></i> Username
@@ -86,20 +86,6 @@ class Dashboard extends Component {
                                 <Doughnut data={this.state.douData} options={{ maintainAspectRatio: false, legend: { position: 'right' } }} width={this.props.width} height={262} />
                                 </div>
                             </div>
-                        </div>
-                        <div className="col-sm-6 col-md-5 col-lg-6">
-                            <div className="card">
-                                <div className="card-header">
-                                    <i className="fa fa-align-justify"></i> Submission
-                                </div>
-                                <div className="card-body">
-                                    <Line data={this.state.lineData} options={{ responsive: true, maintainAspectRatio: false, legend: { position: 'right' } }} width={this.props.width} height={262} />
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div className="row">
-                        <div className="col-sm-6 col-md-5 col-lg-6">
                             <div className="card" >
                                 <div className="card-header">
                                     <i className="fa fa-align-justify"></i> Recently Process
@@ -141,49 +127,61 @@ class Dashboard extends Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="col-sm-4 col-md-3 col-lg-4 ">
+                        <div className="col-sm-8 col-md-8 col-lg-8">
                             <div className="card">
                                 <div className="card-header">
-                                    <i className="fa fa-align-justify"></i> Personal passed task
-                                </div>
-                                <div className="card-body ">
-                                <Bar data={this.state.barData} options={{ maintainAspectRatio: false, legend: { position: 'right' } }} width={this.props.width} height={262} />
-                                </div>
-                            </div>
-                        </div>
-                        <div className="col-sm-2 col-md-2 col-lg-2">
-                            <div className="card" >
-                                <div className="card-header d-flex justify-content-center">
-                                    <i className="fal fa-align-center"></i> Top
+                                    <i className="fa fa-align-justify"></i> Submission
                                 </div>
                                 <div className="card-body">
-                                    <div className="table-responsive" id="myDIV">
-                                        <table className="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>User</th>
-                                                    <th><span class="cui-check"/></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Franxx</td>
-                                                    <td>99</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Franxx</td>
-                                                    <td>99</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Franxx</td>
-                                                    <td>99</td>  
-                                                </tr>
-                                                <tr>
-                                                    <td>Franxx</td>
-                                                    <td>99</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                    <Line data={this.state.lineData} options={{ responsive: true, maintainAspectRatio: false, legend: { position: 'right' } }} width={this.props.width} height={262} />
+                                </div>
+                            </div>
+                            <div className="row">
+                                <div className="col-sm-9 col-md-9 col-lg-9">
+                                    <div className="card">
+                                        <div className="card-header">
+                                            <i className="fa fa-align-justify"></i> Personal passed task
+                                        </div>
+                                        <div className="card-body ">
+                                        <Bar data={this.state.barData} options={{ maintainAspectRatio: false, legend: { position: 'right' } }} width={this.props.width} height={262} />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-sm-3 col-md-3 col-lg-3">
+                                    <div className="card" >
+                                        <div className="card-header d-flex justify-content-center">
+                                            <i className="fal fa-align-center"></i> Top
+                                        </div>
+                                        <div className="card-body">
+                                            <div className="table-responsive" id="myDIV">
+                                                <table className="table table-striped">
+                                                    <thead>
+                                                        <tr>
+                                                            <th>User</th>
+                                                            <th><span class="cui-check"/></th>
+                                                        </tr>
+                                                    </thead>
+                                                    <tbody>
+                                                        <tr>
+                                                            <td>Franxx</td>
+                                                            <td>99</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Franxx</td>
+                                                            <td>99</td>
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Franxx</td>
+                                                            <td>99</td>  
+                                                        </tr>
+                                                        <tr>
+                                                            <td>Franxx</td>
+                                                            <td>99</td>
+                                                        </tr>
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>

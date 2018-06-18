@@ -6,6 +6,7 @@ import Footer from '../../components/Footer/';
 
 import Dashboard from '../../views/Dashboard/';
 import ProblemList from '../../views/ProblemList';
+import Problem from '../../views/Problem';
 class Home extends Component {
 
     render() {
@@ -17,6 +18,7 @@ class Home extends Component {
                         <Switch>              
                             <Route exact path="/home/dashboard" name="Dashboard" component={Dashboard} />
                             <Route path="/home/problems" component={ProblemList}/>
+                            <Route path="/home/item" component={Problem} />
                             <Route path="/" component={Dashboard} />
                             <Redirect from="/" to="/home" />             
                         </Switch>

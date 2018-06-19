@@ -5,8 +5,8 @@ import Header from '../../components/Header/';
 import Footer from '../../components/Footer/';
 
 import Dashboard from '../../views/Dashboard/';
-import ProblemList from '../../views/ProblemList';
-import Problem from '../../views/Problem';
+import Problem from '../../views/Problems';
+
 class Home extends Component {
 
     render() {
@@ -14,13 +14,12 @@ class Home extends Component {
             <div>
                 <Header/>
                 <div className="main">
-                    <div className="container-fluid">
+                    <div className="container">
                         <Switch>              
-                            <Route exact path="/home/dashboard" name="Dashboard" component={Dashboard} />
-                            <Route path="/home/problems" component={ProblemList}/>
-                            <Route path="/home/item" component={Problem} />
+                            <Route path="/dashboard" name="Dashboard" component={Dashboard} />
+                            <Route path="/problems" component={Problem}/>
                             <Route path="/" component={Dashboard} />
-                            <Redirect from="/" to="/home" />             
+                            <Redirect from="/" to="/dashboard" />             
                         </Switch>
                     </div>
                 </div>

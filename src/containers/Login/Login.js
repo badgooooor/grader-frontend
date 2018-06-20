@@ -75,29 +75,16 @@ class Login extends Component {
         
         // Waiting for edit with server
         if(completed) {
-            Axios.post('http://127.0.0.1:3333/check_users', {
+            Axios.post('http://127.0.0.1:3333/add_users', { 
                 username: regisData.username,
                 password: regisData.password,
-            }).then( (res) => { // duplicate
+                email: regisData.email
+            }).then( (res) => {
                 // console.log(res);
-                if(res.data === 'not found'){
-                    Axios.post('http://127.0.0.1:3333/add_users', { 
-                        username: regisData.username,
-                        password: regisData.password,
-                        email: regisData.email
-                    }).then( (res2) => {
-                        // console.log(res2);
-                        swal("Successful!", "You clicked the button!", "success");
-                        this.toggle();
-                    }).catch( (err) => {
-                        swal('Error', 'Error error', 'error');
-                    });
-                }else{
-                    swal("Username is available", "Please use another.", "warning");
-                    // return ;
-                }
+                swal("Successful!", "You clicked the button!", "success");
+                this.toggle();
             }).catch( (err) => {
-                swal('Error', 'Error error', 'error');
+                swal('Warning', 'Username already exist', 'warning');
             });
             // (TODO) add auto login
         }
@@ -113,16 +100,12 @@ class Login extends Component {
                 password: this.state.loginData.password
             }).then( (res) => {
                 // console.log(res);
-                if(res.data === 'not found'){
-                    swal("Not found", 'Username or Password was wrong!', "error");
-                }else{
+                if(res.data == 'found'){
                     swal("Login complete!", "go go go go!", "success");
                     this.props.history.push('/Home');
-                    
-                    // console.log('Error');
                 }
             }).catch( (err) => {
-                swal('Error', 'Error error', 'error');
+                swal('Warning', 'Username or Password was wrong!', 'warning');
             });
         } else {
             this.setState({

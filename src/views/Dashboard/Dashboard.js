@@ -2,14 +2,17 @@ import React, { Component } from 'react';
 
 import { Doughnut, Line, Bar } from 'react-chartjs-2';
 
-const lineDataStlye = {
+
+
+// Data.
+const lineDataStyle = {
     
     labels: [
         '1','2','3','4','5','6','7','8','9'
     ],
     datasets:[{
         label: 'Passed',
-        data: [10, 10, 8, 0, 0, 0, 0, 0, 0],
+        data: [9, 10, 8, 4, 5, 2, 3, 4, 1],
         backgroundColor: '#ff6384',
         borderColor: '#778899',
         fill: false
@@ -25,7 +28,7 @@ const barDataStyle = {
     ],
     datasets:[{
         label: 'case',
-        data: [10, 10, 8, 0, 0, 0, 0, 0, 0],
+        data: [10, 10, 8, 6, 4, 3, 9, 10, 3],
         backgroundColor: '#ff6384',
         borderColor: '#778899',
         fill: false
@@ -54,28 +57,29 @@ const donutDataStyle = {
 
 
 
-const divStyleHightLine = {
+const divStyleHeightLine = {
     height: '20px'
   };
 
-const divStyleHight = {
+const divStyleHeight = {
     height: '160px'
 };
 
 class Dashboard extends Component {
-
     state = {
-        recentlyData: lineDataStlye,
-        lineData: lineDataStlye,
+        recentlyData: lineDataStyle,
+        lineData: lineDataStyle,
         barData: barDataStyle,
         douData: donutDataStyle,
-      }
+        
+        
+    }
 
     render() {
         return(
             <div>
                 <div className="container-fluid" >
-                <div style={divStyleHightLine}/>
+                <div style={divStyleHeightLine}/>
                     <div className="row ">
                         <div className="col-sm-6 col-md-5 col-lg-6">
                             <div className="card">
@@ -189,7 +193,7 @@ class Dashboard extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="footerSpace" style={divStyleHight}/>
+                    <div className="footerSpace" style={divStyleHeight}/>
                 </div>
             </div>
         );

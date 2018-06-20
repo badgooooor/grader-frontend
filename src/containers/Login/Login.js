@@ -100,7 +100,7 @@ class Login extends Component {
                 password: this.state.loginData.password
             }).then( (res) => {
                 // console.log(res);
-                if(res.data == 'found'){
+                if(res.data === 'found'){
                     swal("Login complete!", "go go go go!", "success");
                     this.props.history.push('/Home');
                 }
@@ -220,7 +220,7 @@ class Login extends Component {
                                 <div className="card-body">
                                     <h1>JustCodeIt!</h1>
                                     <p>Grader for Computer Engineering, cyka blyat</p>
-                                    <p className="text-danger">During construction. Proceed with caution</p>
+                                    <p className="text-danger">Full of undocumented features.</p>
                                 </div>
                             </div>
                         </div>

@@ -15,12 +15,13 @@ const divStyleHeightLine = {
 
 class ProblemItemButton extends Component {
     render() {
+        const difficulty = this.props.difficulty;
         return (
             <Link to={{ pathname: '/problems/:id' }}>
                 <button type="button" className="list-group-item list-group-item-action d-flex justify-content-between align-items-center">
                     <p>{this.props.id}</p>
                     {this.props.name}
-                    <span className="badge badge-danger">{this.props.difficulty}</span>
+                    <span className={difficulty === 'Easy' ? "badge badge-success" : (difficulty === 'Medium' ? "badge badge-warning" : "badge badge-danger")}>{difficulty}</span>
                     <p>{this.props.passed}</p>
                 </button>
             </Link>

@@ -4,93 +4,158 @@ import { Doughnut, Line, Bar } from 'react-chartjs-2';
 
 
 
-// Data.
-const lineDataStyle = {
-    
-    labels: [
-        '1','2','3','4','5','6','7','8','9'
+// Mock-up Data.
+const mockUser = {
+    username: 'borbier',
+    submission: [
+        { id: 1, passed: true, submitCount: 4 },
+        { id: 3, passed: false, submitCount: 5 },
+        { id: 4, passed: false, submitCount: 6 }
     ],
-    datasets:[{
+}
+const submitCount = {
+
+}
+
+// Data + style in charts.
+const lineDataStyle = {
+    labels: [
+        '1', '2', '3', '4', '5', '6', '7', '8', '9'
+    ],
+    datasets: [{
         label: 'Passed',
         data: [9, 10, 8, 4, 5, 2, 3, 4, 1],
         backgroundColor: '#ff6384',
         borderColor: '#778899',
         fill: false
-        
-    
+
+
     }]
 }
 
 const barDataStyle = {
-    
+
     labels: [
-        '1','2','3','4','5','6','7','8','9'
+        '1', '2', '3', '4', '5', '6', '7', '8', '9'
     ],
-    datasets:[{
+    datasets: [{
         label: 'case',
         data: [10, 10, 8, 6, 4, 3, 9, 10, 3],
         backgroundColor: '#ff6384',
         borderColor: '#778899',
         fill: false
-        
-    
+
+
     }]
 }
 
-const donutDataStyle = {
-	labels: [
-		'Not Passed',
-		'Passed'
-	],
-	datasets: [{
-		data: [5, 7],
-		backgroundColor: [
-        'rgba(230,255, 230, 0.7)',
-		'#33ff33',
-		],
-		hoverBackgroundColor: [
-        'rgba(230, 255, 230, 0.7)',
-		'#33ff33',
-		]
-	}]
-};
+var donutData = {
+    labels: [
+        'Not Passed',
+        'Passed'
+    ],
+    datasets: [{
+        data: [5, 6],
+        backgroundColor: [
+            'rgba(230,255, 230, 0.7)',
+            '#33ff33',
+        ],
+        hoverBackgroundColor: [
+            'rgba(230, 255, 230, 0.7)',
+            '#33ff33',
+        ]
+    }]
 
-
+}
 
 const divStyleHeightLine = {
     height: '20px'
-  };
+};
 
 const divStyleHeight = {
     height: '160px'
 };
 
+class UserCard extends Component {
+    state = {
+        user: mockUser,
+        douData: donutData,
+        getUserSolvedCount: this.getUserSolvedCount.bind(this)
+    }
+
+    getUserSolvedCount() {
+        let passCount = 0;
+        this.state.user.submission.map((problem) => {
+            if (problem.passed) passCount++;
+        })
+        let failedCount = this.state.user.submission.length - passCount
+        let tempData = [failedCount, passCount]
+        this.state.douData.datasets[0].data = tempData
+    }
+
+    render() {
+        this.getUserSolvedCount();
+        return (
+            <div className="col-sm-6 col-md-5 col-lg-6">
+                <div className="card">
+                    <div className="card-header">
+                        <i className="fa fa-align-justify"></i> {this.state.user.username}
+                    </div>
+                    <div className="card-body">
+                        <Doughnut data={this.state.douData} options={{ maintainAspectRatio: false, legend: { position: 'right' } }} width={this.props.width} height={262} />
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}
+
+class UserSubmitCount extends Component {
+    state = {
+        user: mockUser,
+        barData: barDataStyle,
+        getUserSubmitCount: this.getUserSubmitCount.bind(this)
+    }
+
+    getUserSubmitCount() {
+        let problemId = []
+        let submitCount = []
+        this.state.user.submission.map((problem) => {
+                problemId.push(problem.id)
+                submitCount.push(problem.submitCount)
+        })
+        this.state.barData.labels = problemId;
+        this.state.barData.datasets[0].data = submitCount;
+    }
+
+    render() {
+        this.getUserSubmitCount();
+        return (
+            <div className="card">
+                <div className="card-header">
+                    <i className="fa fa-align-justify"></i> Personal passed task
+                                </div>
+                <div className="card-body ">
+                    <Bar data={this.state.barData} options={{ maintainAspectRatio: false, legend: { position: 'right' } }} width={this.props.width} height={262} />
+                </div>
+            </div>
+        );
+    }
+}
 class Dashboard extends Component {
     state = {
         recentlyData: lineDataStyle,
         lineData: lineDataStyle,
         barData: barDataStyle,
-        douData: donutDataStyle,
-        
-        
     }
 
     render() {
-        return(
+        return (
             <div>
                 <div className="container-fluid" >
-                <div style={divStyleHeightLine}/>
+                    <div style={divStyleHeightLine} />
                     <div className="row ">
-                        <div className="col-sm-6 col-md-5 col-lg-6">
-                            <div className="card">
-                                <div className="card-header">
-                                    <i className="fa fa-align-justify"></i> Username
-                                </div>
-                                <div className="card-body">
-                                <Doughnut data={this.state.douData} options={{ maintainAspectRatio: false, legend: { position: 'right' } }} width={this.props.width} height={262} />
-                                </div>
-                            </div>
-                        </div>
+                        <UserCard />
                         <div className="col-sm-6 col-md-5 col-lg-6">
                             <div className="card">
                                 <div className="card-header">
@@ -146,14 +211,7 @@ class Dashboard extends Component {
                             </div>
                         </div>
                         <div className="col-sm-4 col-md-3 col-lg-4 ">
-                            <div className="card">
-                                <div className="card-header">
-                                    <i className="fa fa-align-justify"></i> Personal passed task
-                                </div>
-                                <div className="card-body ">
-                                <Bar data={this.state.barData} options={{ maintainAspectRatio: false, legend: { position: 'right' } }} width={this.props.width} height={262} />
-                                </div>
-                            </div>
+                            <UserSubmitCount />
                         </div>
                         <div className="col-sm-2 col-md-2 col-lg-2">
                             <div className="card" >
@@ -166,7 +224,7 @@ class Dashboard extends Component {
                                             <thead>
                                                 <tr>
                                                     <th>User</th>
-                                                    <th><span class="cui-check"/></th>
+                                                    <th><span class="cui-check" /></th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -180,7 +238,7 @@ class Dashboard extends Component {
                                                 </tr>
                                                 <tr>
                                                     <td>Franxx</td>
-                                                    <td>99</td>  
+                                                    <td>99</td>
                                                 </tr>
                                                 <tr>
                                                     <td>Franxx</td>
@@ -193,7 +251,7 @@ class Dashboard extends Component {
                             </div>
                         </div>
                     </div>
-                    <div className="footerSpace" style={divStyleHeight}/>
+                    <div className="footerSpace" style={divStyleHeight} />
                 </div>
             </div>
         );

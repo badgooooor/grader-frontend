@@ -16,6 +16,16 @@ const mockUser = {
 const submitCount = {
 
 }
+// Get only user's submission.
+const mockLog = [
+    { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '2', result: 'PPPPP' },
+    { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '3', result: 'PP--P' },
+    { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '4', result: 'PPP--' },
+    { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '12', result: 'Timeout' },
+    { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '20', result: 'Memory' },
+    { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '2', result: 'Compile' },
+    { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '2', result: 'PPPPP' },
+]
 
 // Data + style in charts.
 const lineDataStyle = {
@@ -121,8 +131,8 @@ class UserSubmitCount extends Component {
         let problemId = []
         let submitCount = []
         this.state.user.submission.map((problem) => {
-                problemId.push(problem.id)
-                submitCount.push(problem.submitCount)
+            problemId.push(problem.id)
+            submitCount.push(problem.submitCount)
         })
         this.state.barData.labels = problemId;
         this.state.barData.datasets[0].data = submitCount;
@@ -142,6 +152,50 @@ class UserSubmitCount extends Component {
         );
     }
 }
+class LogElement extends Component {
+    render() {
+        return (
+            <tr>
+                <td>{this.props.submitId}</td>
+                <td>{this.props.time}</td>
+                <td>{this.props.problemId}</td>
+                <td>{this.props.result}</td>
+            </tr>
+        );
+    }
+}
+class SubmitTable extends Component {
+    render() {
+        const submitLog = mockLog;
+        return (
+            <div className="card" >
+                <div className="card-header">
+                    <i className="fa fa-align-justify"></i> Recently Process
+                </div>
+                <div className="card-body">
+                    <div className="table-responsive" id="myDIV">
+                        <table className="table table-striped">
+                            <thead className="thead-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Time</th>
+                                    <th>Problem</th>
+                                    <th>Result</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    submitLog.map((log, i) => <LogElement submitId={log.submitId} problemId={log.problemId} time={log.time} result={log.result} />)
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}
+
 class Dashboard extends Component {
     state = {
         recentlyData: lineDataStyle,
@@ -169,46 +223,7 @@ class Dashboard extends Component {
                     </div>
                     <div className="row">
                         <div className="col-sm-6 col-md-5 col-lg-6">
-                            <div className="card" >
-                                <div className="card-header">
-                                    <i className="fa fa-align-justify"></i> Recently Process
-                                </div>
-                                <div className="card-body">
-                                    <div className="table-responsive" id="myDIV">
-                                        <table className="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>Problem</th>
-                                                    <th>Time</th>
-                                                    <th>Result</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>A+B</td>
-                                                    <td>2012/01/01</td>
-                                                    <td><span className="badge badge-success">Pass</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>A*B</td>
-                                                    <td>2012/02/01</td>
-                                                    <td><span className="badge badge-danger">Compile Error</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>A*C</td>
-                                                    <td>2012/02/01</td>
-                                                    <td><span className="badge badge-secondary">Memory</span></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>A?B</td>
-                                                    <td>2012/03/01</td>
-                                                    <td><span className="badge badge-warning">Runtime Error</span></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
+                            <SubmitTable />
                         </div>
                         <div className="col-sm-4 col-md-3 col-lg-4 ">
                             <UserSubmitCount />

@@ -76,7 +76,6 @@ class ProblemList extends Component {
                             <h3>Level</h3>
                             <h3>Passed</h3>
                         </button>
-                        <ProblemItemButton id="0" name="test" passed="100" difficulty="Easy" />
                         {
                             problemList.map((problem, i) => <ProblemItemButton id={i} name={problem.name} passed={problem.passed} difficulty={problem.difficulty} />)
                         }

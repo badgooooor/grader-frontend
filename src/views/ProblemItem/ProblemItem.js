@@ -21,6 +21,9 @@ const problemCases = [
 ]
 
 class DetailsCard extends Component {
+    constructor(props) {
+        super(props);
+    }
     render() {
         return (
             <div className="card">
@@ -80,7 +83,9 @@ class TestCase extends Component {
 
 
 class ProblemList extends Component {
-
+    constructor(props) {
+        super(props);
+    }
     render() {
         const problem = problemDetail;
         return (
@@ -91,6 +96,7 @@ class ProblemList extends Component {
                         <div className="col-sm-8 col-md-8 col-lg-8">
                             <DetailsCard problem={problem} />
                             <TestCase />   
+                            
                         </div>
                         <div className="col-sm-4 col-md-4 col-lg-4">
                             <div className="card">

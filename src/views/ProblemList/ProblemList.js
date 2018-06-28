@@ -19,28 +19,28 @@ class ProblemItemButton extends Component {
         return (
             <tr> 
             <td>
-                <Link to={{ pathname: '/problems/:id' }}>
+                <Link to={{ pathname: '/problems/:id' , state : this.props}}>
                     <div>
                         <p class="text-dark">{this.props.id}</p>
                     </div>
                 </Link>        
             </td>
             <td>
-                <Link to={{ pathname: '/problems/:id' }}>
+                <Link to={{ pathname: '/problems/:id' , state : this.props}}>
                     <div className="text-center">
                         <p class="text-dark">{this.props.name}</p>
                     </div>
                 </Link>
             </td>
             <td className="text-center">
-                <Link to={{ pathname: '/problems/:id' }}>
+                <Link to={{ pathname: '/problems/:id' , state : this.props}}>
                     <div className="text-center">
                     <span className={difficulty === 'Easy' ? "badge badge-success " : (difficulty === 'Medium' ? "badge badge-warning" : "badge badge-danger")}>{difficulty}</span>
                     </div>  
                 </Link>
             </td>
             <td>
-                <Link to={{ pathname: '/problems/:id' }}>
+                <Link to={{ pathname: '/problems/:id' , state : this.props}}>
                     <div className="text-center">
                         <p className="text-justify text-center text-dark">{this.props.passed}</p>
                     </div>  

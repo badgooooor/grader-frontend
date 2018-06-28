@@ -9,7 +9,7 @@ class Problem extends Component {
         return(
             <Switch>
                 <Route exact path="/problems" component={ProblemList}/>
-                <Route path={"/problems/:id"} render={(props) => <ProblemItem problem={props}/>} />
+                <Route path={"/problems/:id"} component={ProblemItem} />
             </Switch>
         )
     }

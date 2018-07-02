@@ -13,6 +13,8 @@ const problemDetail = {
     id: 0,
     name: '2+2=4',
     detail: 'This problem is an easy one: given integer a and b, calculate a+b.    ',
+    reqInput: 'Two integers',
+    reqOutput: 'Sum of inputs as integer'
 }
 const problemCases = [
     { input: '1 2', output: '3' },
@@ -34,7 +36,9 @@ class DetailsCard extends Component {
                     <i className="fa fa-align-justify">{this.props.problem.name}</i>
                 </div>
                 <div className="card-body">
-                    {this.props.problem.detail}
+                    <p>{this.props.problem.detail}</p>
+                    <p>Input  : {this.props.problem.reqInput}</p>
+                    <p>Output : {this.props.problem.reqOutput}</p>
                 </div>
             </div>
         );
@@ -82,7 +86,7 @@ class TestCase extends Component {
 }
 
 
-class ProblemList extends Component {
+class ProblemItem extends Component {
     constructor(props) {
         super(props);
     }
@@ -140,4 +144,4 @@ class ProblemList extends Component {
     }
 }
 
-export default ProblemList
+export default ProblemItem

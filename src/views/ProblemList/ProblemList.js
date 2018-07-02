@@ -14,12 +14,16 @@ const divStyleHeightLine = {
 };
 
 class ProblemItemButton extends Component {
+    constructor(props) {
+        super(props);
+        
+    }
     render() {
         const difficulty = this.props.difficulty;
         return (
             <tr> 
             <td>
-                <Link to={{ pathname: '/problems/:id' }}>
+                <Link to={ '/problems/${props.id}'}>
                     <div>
                         <p class="text-dark">{this.props.id}</p>
                     </div>

@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Axios from 'axios';
 
 
 const divStyleHightLine = {
@@ -86,6 +87,22 @@ class ProblemList extends Component {
     constructor(props) {
         super(props);
     }
+    uploadfile = (e) => {
+        console.log('test');
+        var files = document.getElementById("file").files[0];
+        var fileReader = new FileReader();
+        // fileReader.readAsText(files);
+        
+        console.log(files);
+        Axios.post('http://127.0.0.1:3333/judge', {
+            source: files
+        }).then( (ms) => {
+
+        }).catch( (ms) => {
+
+        })
+
+    }
     render() {
         const problem = problemDetail;
         return (
@@ -106,7 +123,7 @@ class ProblemList extends Component {
                                 <div className="card-body">
                                     <div className="row">
                                         <div className="col-sm-4 col-md-4 col-lg-4">
-                                            <button type="button" className="btn btn-block btn-primary ">File</button>
+                                            <input id="file" type="file" className="btn btn-block btn-primary " onChange={this.uploadfile} ref={(ref) => this.fileUpload = ref}/>
                                         </div>
                                         <div className="col-sm-8 col-md-8 col-lg-8 d-flex align-items-center">
                                             <div className="progress" style={{ height: 30 + 'px' }}>

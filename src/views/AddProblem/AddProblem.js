@@ -25,7 +25,9 @@ class Testcase extends Component {
     }
 }
 
+class ReqIO extends Component {
 
+}
 class AddProblem extends Component {
 
     constructor(props) {
@@ -72,6 +74,9 @@ class AddProblem extends Component {
                         <div className="col-8">
                             <textarea class="form-control" value={this.state.problemData.description} onChange={(e) => this.updateProblem('description', e.target.value)} placeholder="Description" rows="3"></textarea>  
                         </div>
+                    </div>
+                    <div style={divStyleHeightLine}>
+                    <h3>Test case</h3>
                     </div>
                     <div style={divStyleHeightLine} />
                     <Testcase/>

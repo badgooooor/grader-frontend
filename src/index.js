@@ -10,8 +10,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import '@coreui/icons/css/coreui-icons.min.css';
 
 
-import Home from './containers/Home/Home.js';
-import Login from './containers/Login/Login.js';
+import App from './App';
 
 
 const PrivateRoute = ({ component: Component, authed, ...rest }) => {
@@ -24,14 +23,10 @@ const PrivateRoute = ({ component: Component, authed, ...rest }) => {
     />
   )
 }
+
+
 // Render page
 ReactDOM.render((
-  <BrowserRouter>
-    <Switch>
-      <Route exact path="/" name="Login" component={Login} />
-      <Route path="/login" name="Login" component={Login} />
-      <PrivateRoute authed={false} path="/" name="Home" component={Home} />
-    </Switch>
-  </BrowserRouter>
+  <App />
 ), document.getElementById('root'));
 registerServiceWorker();

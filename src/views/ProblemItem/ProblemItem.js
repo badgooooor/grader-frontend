@@ -91,20 +91,30 @@ class ProblemItem extends Component {
     constructor(props) {
         super(props);
     }
+
+     
     uploadfile = (e) => {
         console.log('test');
-        var files = document.getElementById("file").files[0];
-        var fileReader = new FileReader();
-        // fileReader.readAsText(files);
+        var file = document.getElementById("file").files[0];
+        console.log(file);
+        var reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = function () {
+            console.log(reader.result);
+            
+            Axios.post('http://127.0.0.1:3333/judge', {
+                source: reader.result
+            }).then( (ms) => {
+                alert('ok');
+            }).catch( (ms) => {
+                alert('fail');
+            });
+        };
+        reader.onerror = function (error) {
+            console.log('Error: ', error);
+        };
         
-        console.log(files);
-        Axios.post('http://127.0.0.1:3333/judge', {
-            source: files
-        }).then( (ms) => {
-
-        }).catch( (ms) => {
-
-        })
+        // console.log(files);
 
     }
     render() {

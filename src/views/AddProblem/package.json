@@ -1,0 +1,6 @@
+{
+  "name": "AddProblem",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./AddProblem.js"
+}

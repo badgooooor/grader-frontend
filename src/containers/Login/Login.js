@@ -28,7 +28,8 @@ class Login extends Component {
             validLogin: null,
             registerMsg: '',
             loginMsg: '',
-            register: false
+            register: false,
+            authed: false
         }
     }
 
@@ -38,17 +39,17 @@ class Login extends Component {
         });
     }
 
-    handleRegister = (e) => {
+    handleRegister = (e, authed) => {
         e.preventDefault();
         let completed = false;
         var regisData = this.state.regisData;
         var regisValidate = this.state.regisValidate;
-        
+
         // console.log(regisValidate);
         // console.log(regisData);
 
         Object.keys(regisData).forEach((keys) => {
-            if(regisData[keys] === '') {
+            if (regisData[keys] === '') {
                 regisValidate[keys] = false;
                 completed = false;
                 this.setState({
@@ -61,30 +62,31 @@ class Login extends Component {
         });
 
         // console.log(regisValidate);
-        
+
         // this.setState({
         //     regisValidate: this.regisValidate
         // });
 
-        if(completed && regisData.password !== regisData.passwordConfirm) {
+        if (completed && regisData.password !== regisData.passwordConfirm) {
             this.setState({
                 registerMsg: 'Password is not match.'
             });
             completed = false;
         }
-        
+
         // Waiting for edit with server
-        if(completed) {
-            Axios.post('http://127.0.0.1:3333/add_users', { 
+        if (completed) {
+            Axios.post('http://127.0.0.1:3333/add_users', {
                 username: regisData.username,
                 password: regisData.password,
                 email: regisData.email
-            }).then( (res) => {
+            }).then((res) => {
                 // console.log(res);
                 swal("Successful!", "You clicked the button!", "success");
                 this.toggle();
-            }).catch( (err) => {
+            }).catch((err) => {
                 swal('Warning', 'Username already exist', 'warning');
+
             });
             // (TODO) add auto login
         }
@@ -93,26 +95,28 @@ class Login extends Component {
     // Wating for edit with server
     handleLogin = (e) => {
         e.preventDefault();
-        if(this.state.loginData.password && this.state.loginData.username) {
+        if (this.state.loginData.password && this.state.loginData.username) {
             // console.log(this.state.loginData);
             Axios.post('http://127.0.0.1:3333/check_users', {
                 username: this.state.loginData.username,
                 password: this.state.loginData.password
-            }).then( (res) => {
+            }).then((res) => {
                 // console.log(res);
-                if(res.data === 'found'){
+                if (res.data === 'found') {
+                    this.updateAuthen('authed', true);
                     swal("Login complete!", "go go go go!", "success");
                     this.props.history.push('/Home');
                 }
-            }).catch( (err) => {
+            }).catch((err) => {
                 swal('Warning', 'Username or Password was wrong!', 'warning');
+                this.updateAuthen('authed', false);
             });
         } else {
             this.setState({
                 loginMsg: 'Form is incompleted.'
             });
         }
-        
+
     }
 
     updateRegis(key, value) {
@@ -129,9 +133,16 @@ class Login extends Component {
         })
     }
 
+    updateAuthen(key, value) {
+        this.setState({
+            authed: value
+        })
+        localStorage.setItem(key, value);
+    }
+
     render() {
         var background = {
-            backgroundImage: 'url('+image+')',
+            backgroundImage: 'url(' + image + ')',
             height: 'auto',
             width: '100%',
             position: 'fixed'
@@ -153,13 +164,13 @@ class Login extends Component {
                                 Password
                                 <div class="input-group mb-4">
                                     <div class="input-group-prepend">
-                                        <input value={this.state.regisData.password} onChange={(e) => this.updateRegis('password', e.target.value)}type="password" className="form-control" placeholder="Password" />
+                                        <input value={this.state.regisData.password} onChange={(e) => this.updateRegis('password', e.target.value)} type="password" className="form-control" placeholder="Password" />
                                     </div>
                                 </div>
                                 Confirm Password
                                 <div class="input-group mb-4">
                                     <div class="input-group-prepend">
-                                        <input value={this.state.regisData.passwordConfirm} onChange={(e) => this.updateRegis('passwordConfirm', e.target.value)}type="password" className="form-control" placeholder="Confirm Password" />
+                                        <input value={this.state.regisData.passwordConfirm} onChange={(e) => this.updateRegis('passwordConfirm', e.target.value)} type="password" className="form-control" placeholder="Confirm Password" />
                                     </div>
                                 </div>
                                 Email
@@ -173,9 +184,9 @@ class Login extends Component {
                         <ModalFooter>
                             {
                                 this.state.registerMsg === "" ? "" :
-                                <div style={{ marginRight: 16 }}>
-                                    {this.state.registerMsg}
-                                </div>
+                                    <div style={{ marginRight: 16 }}>
+                                        {this.state.registerMsg}
+                                    </div>
                             }
                             <div>
                                 <button type="button" onClick={this.handleRegister} className="btn btn-primary">Register</button>
@@ -194,15 +205,15 @@ class Login extends Component {
                                     <form>
                                         <div className="input-group mb-3">
                                             <div className="input-group-prepend">
-                                                <input type="text" value={this.state.loginData.username} onChange={(e) => { this.updateLogin('username', e.target.value)}} className="form-control" placeholder="Username" />
+                                                <input type="text" value={this.state.loginData.username} onChange={(e) => { this.updateLogin('username', e.target.value) }} className="form-control" placeholder="Username" />
                                             </div>
                                         </div>
                                         <div className="input-group mb-3">
                                             <div className="input-group-prepend">
-                                                <input type="password" value={this.state.loginData.pasword} onChange={(e) => { this.updateLogin('password', e.target.value)}} className="form-control" placeholder="Password" />
+                                                <input type="password" value={this.state.loginData.pasword} onChange={(e) => { this.updateLogin('password', e.target.value) }} className="form-control" placeholder="Password" />
                                             </div>
                                         </div>
-                                        { this.state.loginMsg ? <p>{ this.state.loginMsg}</p> : '' }
+                                        {this.state.loginMsg ? <p>{this.state.loginMsg}</p> : ''}
                                         <div className="row">
                                             <div className="col-6">
                                                 <button onClick={this.handleLogin} type="button" className="btn btn-primary px-4">Login</button>

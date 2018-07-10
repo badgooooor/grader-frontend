@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import Axios from 'axios';
 
 import { Doughnut, Line, Bar } from 'react-chartjs-2';
 
@@ -30,11 +31,11 @@ const mockLog = [
 // Data + style in charts.
 const lineDataStyle = {
     labels: [
-        '1', '2', '3', '4', '5', '6', '7', '8', '9'
+        
     ],
     datasets: [{
         label: 'Passed',
-        data: [9, 10, 8, 4, 5, 2, 3, 4, 1],
+        data: [],
         backgroundColor: '#ff6384',
         borderColor: '#778899',
         fill: false
@@ -120,6 +121,86 @@ class UserCard extends Component {
     }
 }
 
+class SubmissionCard extends Component{
+
+    constructor(props){
+        super(props)
+        this.state = {
+            lineData: lineDataStyle,
+            cardName: 'Submission'
+        }
+        this.getAllPassedCount = this.getAllPassedCount.bind(this);
+    }
+
+    componentDidMount() {
+        this.timer = setInterval(
+          () => this.getAllPassedCount(),
+          5000
+        )
+      }
+    
+      componentWillUnmount() {
+        clearInterval(this.timer)
+      }
+
+    getAllPassedCount(){
+        let allPassedCount = [];
+        let allLabel = [];
+        let problemAmount = 0;
+
+        Axios.get('http://127.0.0.1:3333/list_problem/').then(res => {
+            problemAmount = res.data['problems'].length;
+            
+            for(let id = 0; id < problemAmount; id++){
+                let link = 'http://127.0.0.1:3333/get_problem/'+ id.toString();
+                    Axios.get(link)
+                    .then(res => {
+                        allLabel.push(id.toString());
+                        allPassedCount.push(res.data[0]['passedCount']);
+
+                        if(id == problemAmount - 1)
+                        this.setState({
+                            lineData: Object.assign({}, this.state.lineData, {
+                                labels: allLabel,
+                                datasets: [{
+                                    label: 'Passed',
+                                    data: allPassedCount,
+                                    backgroundColor: '#ff6384',
+                                    borderColor: '#778899',
+                                    fill: false
+                                }]
+                            })
+                        });
+
+                    }).catch( (err) => {
+                        console.log('err: pushing problem detail');
+                    });
+            }
+            
+            
+        }).catch( (err) => {
+                console.log('err: listing problem');
+        });
+    }
+
+    render(){
+        console.log(this.state.lineData)
+        console.log(lineDataStyle)
+        return(
+        <div className="col-sm-6 col-md-5 col-lg-6">
+            <div className="card">
+                <div className="card-header">
+                    <i className="fa fa-align-justify"></i> {this.state.cardName}
+                </div>
+                <div className="card-body">
+                    <Line data={this.state.lineData} options={{ responsive: true, maintainAspectRatio: false, legend: { position: 'right' } }} width={this.props.width} onChange={this.changeHandler} height={262} />
+                </div>
+            </div>
+        </div>
+        );                  
+    }
+}
+
 class UserSubmitCount extends Component {
     state = {
         user: mockUser,
@@ -199,7 +280,6 @@ class SubmitTable extends Component {
 class Dashboard extends Component {
     state = {
         recentlyData: lineDataStyle,
-        lineData: lineDataStyle,
         barData: barDataStyle,
     }
 
@@ -210,16 +290,7 @@ class Dashboard extends Component {
                     <div style={divStyleHeightLine} />
                     <div className="row ">
                         <UserCard />
-                        <div className="col-sm-6 col-md-5 col-lg-6">
-                            <div className="card">
-                                <div className="card-header">
-                                    <i className="fa fa-align-justify"></i> Submission
-                                </div>
-                                <div className="card-body">
-                                    <Line data={this.state.lineData} options={{ responsive: true, maintainAspectRatio: false, legend: { position: 'right' } }} width={this.props.width} height={262} />
-                                </div>
-                            </div>
-                        </div>
+                        <SubmissionCard />
                     </div>
                     <div className="row">
                         <div className="col-sm-6 col-md-5 col-lg-6">

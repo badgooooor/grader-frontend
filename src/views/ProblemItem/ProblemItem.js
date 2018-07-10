@@ -91,6 +91,7 @@ class ProblemItem extends Component {
         super(props);
     }
     render() {
+        const probs = this.props.location.state;
         const problem = problemDetail;
         return (
             <div>
@@ -98,7 +99,7 @@ class ProblemItem extends Component {
                     <div style={divStyleHightLine} />
                     <div className="row ">
                         <div className="col-sm-8 col-md-8 col-lg-8">
-                            <DetailsCard problem={problem} />
+                            <DetailsCard problem={probs} />
                             <TestCase />   
                             
                         </div>

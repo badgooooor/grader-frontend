@@ -24,6 +24,10 @@ class Header extends Component {
     });
   }
 
+  clickHandler(){
+    localStorage.clear();
+  }
+
   render() {
     return (
       <div>
@@ -39,7 +43,7 @@ class Header extends Component {
                 <NavLink className="text-light" href="/problems">Problems</NavLink>
               </NavItem>
               <NavItem>
-                <NavLink className="text-light" href="/">Logout</NavLink>
+                <NavLink className="text-light" href="/" onClick={this.clickHandler}>Logout</NavLink>
               </NavItem>
             </Nav>
           </Collapse>

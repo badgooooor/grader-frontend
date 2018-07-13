@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
-
+import swal from 'sweetalert';
 
 const divStyleHightLine = {
     height: '20px'
@@ -107,9 +107,9 @@ class ProblemItem extends Component {
             Axios.post('http://127.0.0.1:3333/judge', {
                 source: reader.result
             }).then( (ms) => {
-                alert('ok');
+                swal("Upload success!", "success");
             }).catch( (ms) => {
-                alert('fail');
+                swal("Upload failed!", "error");
             });
         };
         reader.onerror = function (error) {
@@ -150,13 +150,8 @@ class ProblemItem extends Component {
                                 </div>
                                 <div className="card-body">
                                     <div className="row">
-                                        <div className="col-sm-4 col-md-4 col-lg-4">
+                                        <div className="col-sm-12 col-md-12 col-lg-12">
                                             <input id="file" type="file" className="btn btn-block btn-primary " onChange={this.uploadfile} ref={(ref) => this.fileUpload = ref}/>
-                                        </div>
-                                        <div className="col-sm-8 col-md-8 col-lg-8 d-flex align-items-center">
-                                            <div className="progress" style={{ height: 30 + 'px' }}>
-                                                <div className="progress-bar" role="progressbar" style={{ width: 0 + '%' }} aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
                                         </div>
                                     </div>
                                     <div style={divStyleHightLine} />

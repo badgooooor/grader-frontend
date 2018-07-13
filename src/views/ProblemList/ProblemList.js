@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
+import Axios from 'axios';
 
-const mockUpData = [
-    { id: 1, name: 'A+B', difficulty: 'Easy', passed: 143 },
-    { id: 2, name: 'Recursive', difficulty: 'Hard', passed: 12 },
-    { id: 3, name: 'A^B', difficulty: 'Medium', passed: 45 },
-    { id: 4, name: 'Grading', difficulty: 'Easy', passed: 73 },
-    { id: 5, name: 'SmartCamp', difficulty: 'Hard', passed: 121 },
+let mockUpData = [
+    //{ problemId: 1, name: 'A+B', difficulty: 'Easy', passedCount: 143 },
+    //{ problemId: 2, name: 'Recursive', difficulty: 'Hard', passedCount: 12 },
+    //{ problemId: 3, name: 'A^B', difficulty: 'Medium', passedCount: 45 },
+    //{ problemId: 4, name: 'Grading', difficulty: 'Easy', passedCount: 73 },
+    //{ problemId: 5, name: 'SmartCamp', difficulty: 'Hard', passedCount: 121 },
 ]
 
 const divStyleHeightLine = {
@@ -23,28 +24,28 @@ class ProblemItemButton extends Component {
         return (
             <tr> 
             <td>
-                <Link to={{ pathname: '/problems/:id' , state : this.props}}>
+                <Link to={{ pathname: '/problems/' + this.props.id , state : this.props}}>
                     <div>
                         <p class="text-dark">{this.props.id}</p>
                     </div>
                 </Link>        
             </td>
             <td>
-                <Link to={{ pathname: '/problems/:id' , state : this.props}}>
+                <Link to={{ pathname: '/problems/' + this.props.id , state : this.props}}>
                     <div className="text-center">
                         <p class="text-dark">{this.props.name}</p>
                     </div>
                 </Link>
             </td>
             <td className="text-center">
-                <Link to={{ pathname: '/problems/:id' , state : this.props}}>
+                <Link to={{ pathname: '/problems/' + this.props.id , state : this.props}}>
                     <div className="text-center">
                     <span className={difficulty === 'Easy' ? "badge badge-success " : (difficulty === 'Medium' ? "badge badge-warning" : "badge badge-danger")}>{difficulty}</span>
                     </div>  
                 </Link>
             </td>
             <td>
-                <Link to={{ pathname: '/problems/:id' , state : this.props}}>
+                <Link to={{ pathname: '/problems/' + this.props.id , state : this.props}}>
                     <div className="text-center">
                         <p className="text-justify text-center text-dark">{this.props.passed}</p>
                     </div>  
@@ -64,11 +65,11 @@ class ProblemList extends Component {
 
     currentProblem(){
         this.searchData = [];
-        if(this.SearchBar.value === '') this.searchData = mockUpData;
+        if(this.SearchBar.value === '' && mockUpData !== null) this.searchData = mockUpData;
         else
             for(let index = 0 ; index < mockUpData.length ; index++){
                 if(mockUpData[index].name.indexOf(this.SearchBar.value) >= 0
-                    || mockUpData[index].id.toString().indexOf(this.SearchBar.value) >= 0
+                    || mockUpData[index].problemId.toString().indexOf(this.SearchBar.value) >= 0
                     || mockUpData[index].difficulty.indexOf(this.SearchBar.value) >= 0){
                     this.searchData.push(mockUpData[index]);
                 }
@@ -80,16 +81,29 @@ class ProblemList extends Component {
 
     handleQuery = () => {
         console.log(this.state.query);
-        this.searchData = this.currentProblem();
+        this.currentProblem();
     }
     handleInputChange = () => {
         this.setState({
             query: this.SearchBar.value
         })
-        this.searchData = this.currentProblem();
+        this.currentProblem();
+    }
+    
+    update(){
+        Axios.get('http://127.0.0.1:3333/list_problem/').then(res => {
+            mockUpData = res.data['problems'];
+            this.setState({
+                query: this.SearchBar.value
+            })
+            this.currentProblem();
+        }).catch( (err) => {
+            console.log('err: listing problem');
+        });
     }
 
     render() {
+        this.update()
         return (
             <div>
                 <div className="container-fluid bd-content" >
@@ -127,7 +141,7 @@ class ProblemList extends Component {
                             </thead>
                             <tbody>
                                 {
-                                    this.searchData.map((problem) => <ProblemItemButton id={problem.id} name={problem.name} passed={problem.passed} difficulty={problem.difficulty} />)
+                                    this.searchData.map((problem) => <ProblemItemButton id={problem.problemId} name={problem.name} passed={problem.passedCount} difficulty={problem.difficulty} />)
                                 }
                                 <div style={{height : 100 + 'px'}}/>
                             </tbody>

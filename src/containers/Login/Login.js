@@ -5,6 +5,8 @@ import image from '../../background-1.jpg'
 import Axios from 'axios';
 import swal from 'sweetalert';
 
+var CryptoJS = require("crypto-js");
+
 class Login extends Component {
     constructor(props) {
         super(props);
@@ -104,6 +106,7 @@ class Login extends Component {
                 // console.log(res);
                 if (res.data === 'found') {
                     this.updateAuthen('authed', true);
+                    this.saveUsername(CryptoJS.AES.encrypt(this.state.loginData.username, 'secret key 123nbt'));
                     swal("Login complete!", "go go go go!", "success");
                     this.props.history.push('/Home');
                 }
@@ -138,6 +141,10 @@ class Login extends Component {
             authed: value
         })
         localStorage.setItem(key, value);
+    }
+
+    saveUsername(value) {
+        localStorage.setItem('U2FsdGVkX1+mSZ68YZV2YQ9pMNgBL/UQj1YOjaAxZn0=', value);
     }
 
     render() {

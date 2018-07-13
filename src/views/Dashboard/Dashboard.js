@@ -3,22 +3,18 @@ import Axios from 'axios';
 
 import { Doughnut, Line, Bar } from 'react-chartjs-2';
 
-
+var CryptoJS = require("crypto-js");
 
 // Mock-up Data.
-const mockUser = {
-    username: 'borbier',
-    submission: [
-        { id: 1, passed: true, submitCount: 4 },
-        { id: 3, passed: false, submitCount: 5 },
-        { id: 4, passed: false, submitCount: 6 }
-    ],
+var mockUser = {
+    username: '',
+    problemSolved: [ ],
 }
 const submitCount = {
 
 }
 // Get only user's submission.
-const mockLog = [
+let mockLog = [
     { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '2', result: 'PPPPP' },
     { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '3', result: 'PP--P' },
     { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '4', result: 'PPP--' },
@@ -79,6 +75,9 @@ var donutData = {
 
 }
 
+let problems;
+
+//stlye
 const divStyleHeightLine = {
     height: '20px'
 };
@@ -94,18 +93,35 @@ class UserCard extends Component {
         getUserSolvedCount: this.getUserSolvedCount.bind(this)
     }
 
+    componentDidMount() {
+        this.timer = setInterval(
+          () => this.getUserSolvedCount(),
+          2000
+        )
+    }
+    
+    componentWillUnmount() {
+        clearInterval(this.timer)
+    }
+
     getUserSolvedCount() {
+        this.setState({
+            user: Object.assign({}, this.state.user, {
+                username: mockUser['username'],
+                problemSolved: mockUser['problemSolved']
+            })
+        });
         let passCount = 0;
-        this.state.user.submission.map((problem) => {
-            if (problem.passed) passCount++;
+        if(this.state.user.problemSolved != null)
+        this.state.user.problemSolved.map((problem) => {
+            if (problem.solved) passCount++;
         })
-        let failedCount = this.state.user.submission.length - passCount
-        let tempData = [failedCount, passCount]
-        this.state.douData.datasets[0].data = tempData
+        let failedCount = problems['problems'].length - passCount;
+        let tempData = [failedCount, passCount];
+        this.state.douData.datasets[0].data = tempData;
     }
 
     render() {
-        this.getUserSolvedCount();
         return (
             <div className="col-sm-6 col-md-5 col-lg-6">
                 <div className="card">
@@ -135,57 +151,39 @@ class SubmissionCard extends Component{
     componentDidMount() {
         this.timer = setInterval(
           () => this.getAllPassedCount(),
-          5000
+          1000
         )
-      }
+    }
     
-      componentWillUnmount() {
+    componentWillUnmount() {
         clearInterval(this.timer)
-      }
+    }
 
     getAllPassedCount(){
         let allPassedCount = [];
         let allLabel = [];
-        let problemAmount = 0;
 
-        Axios.get('http://127.0.0.1:3333/list_problem/').then(res => {
-            problemAmount = res.data['problems'].length;
-            
-            for(let id = 0; id < problemAmount; id++){
-                let link = 'http://127.0.0.1:3333/get_problem/'+ id.toString();
-                    Axios.get(link)
-                    .then(res => {
-                        allLabel.push(id.toString());
-                        allPassedCount.push(res.data[0]['passedCount']);
-
-                        if(id == problemAmount - 1)
-                        this.setState({
-                            lineData: Object.assign({}, this.state.lineData, {
-                                labels: allLabel,
-                                datasets: [{
-                                    label: 'Passed',
-                                    data: allPassedCount,
-                                    backgroundColor: '#ff6384',
-                                    borderColor: '#778899',
-                                    fill: false
-                                }]
-                            })
-                        });
-
-                    }).catch( (err) => {
-                        console.log('err: pushing problem detail');
-                    });
+        if(problems != null)
+            for(let id = 0; id < problems['problems'].length; id++){
+                allLabel.push(id.toString());
+                allPassedCount.push(problems['problems'][id]['passedCount']);
+                
             }
-            
-            
-        }).catch( (err) => {
-                console.log('err: listing problem');
+        this.setState({
+            lineData: Object.assign({}, this.state.lineData, {
+                labels: allLabel,
+                datasets: [{
+                    label: 'Passed',
+                    data: allPassedCount,
+                    backgroundColor: '#ff6384',
+                    borderColor: '#778899',
+                    fill: false
+                }]
+            })
         });
     }
 
     render(){
-        console.log(this.state.lineData)
-        console.log(lineDataStyle)
         return(
         <div className="col-sm-6 col-md-5 col-lg-6">
             <div className="card">
@@ -201,26 +199,44 @@ class SubmissionCard extends Component{
     }
 }
 
-class UserSubmitCount extends Component {
+class UserSolvedCount extends Component {
     state = {
         user: mockUser,
         barData: barDataStyle,
-        getUserSubmitCount: this.getUserSubmitCount.bind(this)
+        getUserSubmitCount: this.getUserSolvedCount.bind(this)
     }
 
-    getUserSubmitCount() {
+    componentDidMount() {
+        this.timer = setInterval(
+          () => this.getUserSolvedCount(),
+          2000
+        )
+    }
+    
+    componentWillUnmount() {
+        clearInterval(this.timer)
+    }
+
+    getUserSolvedCount() {
+        this.setState({
+            user: Object.assign({}, this.state.user, {
+                username: mockUser['username'],
+                problemSolved: mockUser['problemSolved']
+            })
+        });
+
         let problemId = []
-        let submitCount = []
-        this.state.user.submission.map((problem) => {
-            problemId.push(problem.id)
-            submitCount.push(problem.submitCount)
-        })
+        let solveCount = []
+        if(this.state.user.problemSolved != null)
+            this.state.user.problemSolved.map((problem) => {
+                problemId.push(problem.id)
+                solveCount.push(problem.solveCount)
+            })
         this.state.barData.labels = problemId;
-        this.state.barData.datasets[0].data = submitCount;
+        this.state.barData.datasets[0].data = solveCount;
     }
 
     render() {
-        this.getUserSubmitCount();
         return (
             <div className="card">
                 <div className="card-header">
@@ -246,8 +262,32 @@ class LogElement extends Component {
     }
 }
 class SubmitTable extends Component {
+
+    state = {
+        log : mockLog
+    }
+
+    componentDidMount() {
+        this.timer = setInterval(
+          () => this.update(),
+          2000
+        )
+    }
+    
+    componentWillUnmount() {
+        clearInterval(this.timer)
+    }
+
+    update(){
+        this.setState({
+            log: Object.assign({}, this.state.log, {
+                log : mockLog
+            })
+        });
+    }
+
+
     render() {
-        const submitLog = mockLog;
         return (
             <div className="card" >
                 <div className="card-header">
@@ -266,7 +306,7 @@ class SubmitTable extends Component {
                             </thead>
                             <tbody>
                                 {
-                                    submitLog.map((log, i) => <LogElement submitId={log.submitId} problemId={log.problemId} time={log.time} result={log.result} />)
+                                    mockLog.map((log, i) => <LogElement submitId={log.submitId} problemId={log.problemId} time={log.time} result={log.result} />)
                                 }
                             </tbody>
                         </table>
@@ -283,7 +323,43 @@ class Dashboard extends Component {
         barData: barDataStyle,
     }
 
+    componentDidMount() {
+        this.timer = setInterval(
+          () => this.update(),
+          5000
+        )
+    }
+    
+    componentWillUnmount() {
+        clearInterval(this.timer)
+    }
+
+    decryptPlainText(text){
+        return CryptoJS.AES.decrypt(text,'secret key 123nbt').toString(CryptoJS.enc.Utf8)
+    }
+    
+    update(){
+        mockUser['username'] = this.decryptPlainText(localStorage.getItem('U2FsdGVkX1+mSZ68YZV2YQ9pMNgBL/UQj1YOjaAxZn0='));
+        Axios.get('http://127.0.0.1:3333/get_user/' + mockUser['username']).then(res => {
+            mockUser = res.data[0];
+        }).catch( (err) => {
+                console.log('err: listing problem');
+        });
+        Axios.get('http://127.0.0.1:3333/list_problem/').then(res => {
+            problems = res.data;
+        }).catch( (err) => {
+                console.log('err: listing problem');
+        });
+        Axios.get('http://127.0.0.1:3333/list_user_submit/'+ mockUser['username']).then(res => {
+            mockLog = res.data['logData'];    
+        }).catch( (err) => {
+                console.log('err: listing problem');
+        });
+
+    }
+
     render() {
+        this.update();
         return (
             <div>
                 <div className="container-fluid" >
@@ -297,7 +373,7 @@ class Dashboard extends Component {
                             <SubmitTable />
                         </div>
                         <div className="col-sm-4 col-md-3 col-lg-4 ">
-                            <UserSubmitCount />
+                            <UserSolvedCount />
                         </div>
                         <div className="col-sm-2 col-md-2 col-lg-2">
                             <div className="card" >

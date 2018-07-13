@@ -10,14 +10,14 @@ const divStyleHight = {
     height: '160px'
 };
 
-const problemDetail = {
-    id: 0,
-    name: '2+2=4',
-    detail: 'This problem is an easy one: given integer a and b, calculate a+b.    ',
-    reqInput: 'Two integers',
-    reqOutput: 'Sum of inputs as integer'
+let problemDetail = {
+    //id: 0,
+    //name: '2+2=4',
+    //detail: 'This problem is an easy one: given integer a and b, calculate a+b.    ',
+    //reqInput: 'Two integers',
+    //reqOutput: 'Sum of inputs as integer'
 }
-const problemCases = [
+let problemCases = [
     { input: '1 2', output: '3' },
     { input: '2 2', output: '4' },
     { input: '5 4', output: '9' }
@@ -31,15 +31,15 @@ class DetailsCard extends Component {
         return (
             <div className="card">
                 <div className="card-header">
-                    <div className="col-sm-2 col-md-2 col-lg-2">
-                        <i className="fa fa-align-justify">#{this.props.problem.id}</i>
-                    </div>
-                    <i className="fa fa-align-justify">{this.props.problem.name}</i>
+                    <i className="fa fa-align-justify">#{this.props.problem['problemId']}</i>
+                    <div className="col">
+                        <i className="fa fa-align-justify">{this.props.problem['name']}</i>    
+                    </div>    
                 </div>
                 <div className="card-body">
-                    <p>{this.props.problem.detail}</p>
-                    <p>Input  : {this.props.problem.reqInput}</p>
-                    <p>Output : {this.props.problem.reqOutput}</p>
+                    <p>{this.props.problem['description']}</p>
+                    <p>Input  : {this.props.problem['reqInput']}</p>
+                    <p>Output : {this.props.problem['reqOutput']}</p>
                 </div>
             </div>
         );
@@ -58,14 +58,13 @@ class TestItem extends Component {
 }
 
 class TestCase extends Component {
+    constructor(props) {
+        super(props);   
+    }
     render() {
         return (
             <div className="card">
-                <div className="card-header">
-                    <div className="col-sm-2 col-md-2 col-lg-2">
-                        Test Cases
-                    </div>
-                </div>
+                <div className="card-header">Test Cases</div>
                 <div className="card-body">
                     <table className="table table-responsive-sm">
                         <thead>
@@ -75,9 +74,9 @@ class TestCase extends Component {
                             </tr>
                         </thead>
                         <tbody>
-                            <TestItem input={ problemCases[0].input } output={ problemCases[0].output}/>
-                            <TestItem input={ problemCases[1].input } output={ problemCases[1].output}/>
-                            <TestItem input={ problemCases[2].input } output={ problemCases[2].output}/>
+                            <TestItem input={ problemCases[0]['input'] } output={ problemCases[0]['output']}/>
+                            <TestItem input={ problemCases[1]['input'] } output={ problemCases[1]['output']}/>
+                            <TestItem input={ problemCases[2]['input'] } output={ problemCases[2]['output']}/> 
                         </tbody>
                     </table>
                 </div>
@@ -92,7 +91,10 @@ class ProblemItem extends Component {
         super(props);
     }
 
-     
+    state = {
+        problem : {}
+    }
+    
     uploadfile = (e) => {
         console.log('test');
         var file = document.getElementById("file").files[0];
@@ -117,18 +119,29 @@ class ProblemItem extends Component {
         // console.log(files);
 
     }
+
+    update(){
+        Axios.get('http://127.0.0.1:3333/get_problem/' + this.props.location.state['id']).then(res => {
+            this.setState({
+                problem : res.data[0]
+            })
+            problemCases = this.state.problem['testCase'];
+            console.log(this.state.problem);
+        }).catch( (err) => {
+            console.log('err: get '+ this.props.location.state['id'] +' problem');
+        });
+    }
+
     render() {
-        const probs = this.props.location.state;
-        const problem = problemDetail;
+        this.update();
         return (
             <div>
                 <div className="container-fluid" >
                     <div style={divStyleHightLine} />
                     <div className="row ">
                         <div className="col-sm-8 col-md-8 col-lg-8">
-                            <DetailsCard problem={probs} />
-                            <TestCase />   
-                            
+                            <DetailsCard problem={this.state.problem} />
+                            <TestCase />     
                         </div>
                         <div className="col-sm-4 col-md-4 col-lg-4">
                             <div className="card">

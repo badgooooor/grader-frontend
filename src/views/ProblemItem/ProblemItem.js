@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
-
+import swal from 'sweetalert'; 
 
 const divStyleHightLine = {
     height: '20px'
@@ -28,6 +28,7 @@ class DetailsCard extends Component {
         super(props);
     }
     render() {
+        console.log(this.props.problem);
         return (
             <div className="card">
                 <div className="card-header">
@@ -89,29 +90,23 @@ class TestCase extends Component {
 class ProblemItem extends Component {
     constructor(props) {
         super(props);
-    }
-
-    state = {
-        problem : {}
+        this.state = {
+            problem : {},
+            uploadedCode : '',
+            outputCase : [],
+            result : ''
+        }
+        this.update();
     }
     
     uploadfile = (e) => {
         console.log('test');
-        var file = document.getElementById("file").files[0];
-        console.log(file);
+        var input = e.target;
         var reader = new FileReader();
-        reader.readAsDataURL(file);
-        reader.onload = function () {
-            console.log(reader.result);
-            
-            Axios.post('http://127.0.0.1:3333/judge', {
-                source: reader.result
-            }).then( (ms) => {
-                alert('ok');
-            }).catch( (ms) => {
-                alert('fail');
-            });
-        };
+        reader.onload = () => this.setState({
+            uploadedCode: reader.result
+        });
+        reader.readAsText(input.files[0]);
         reader.onerror = function (error) {
             console.log('Error: ', error);
         };
@@ -120,20 +115,67 @@ class ProblemItem extends Component {
 
     }
 
+    sendTestCase(caseIndex, output){
+        console.log(caseIndex);
+        if(caseIndex < 10){
+            Axios.post('http://127.0.0.1:3333/judge', {
+                    source: this.state.uploadedCode,
+                    input : this.state.problem['testCase'][caseIndex]['input']
+                }).then((ms) => {
+                    output.push(ms['data']);
+                    console.log(caseIndex)
+                    this.sendTestCase(caseIndex+1, output)
+                }).catch((ms) => {
+                    console.log(caseIndex)
+                    swal("Upload failed!", "error");
+                    return []
+                });
+        }
+        else{
+            console.log(output);
+            console.log(output.length);
+            let caseResult = '';
+            for(let i = 0; i < output.length; i++){
+                console.log(output[i]['stdout'] + ' '+ this.state.problem['testCase'][i]['output']);
+                if(output[i]['stdout'] === this.state.problem['testCase'][i]['output']){
+                    caseResult += 'P';
+                }
+                else{
+                    caseResult += '-';
+                }
+            }
+            this.setState({
+                result : caseResult
+            });
+            swal("Upload success!", "success"); 
+        }
+        return output;
+    }
+
+    handleSend = (e) => {
+        e.preventDefault();
+        if(this.state.uploadedCode === ''){
+            swal("Empty Code!", "error");
+        }
+        else{
+            this.setState({
+                output: this.sendTestCase( 0, [])
+            })
+        }
+    }
+
     update(){
         Axios.get('http://127.0.0.1:3333/get_problem/' + this.props.location.state['id']).then(res => {
             this.setState({
                 problem : res.data[0]
             })
             problemCases = this.state.problem['testCase'];
-            console.log(this.state.problem);
         }).catch( (err) => {
             console.log('err: get '+ this.props.location.state['id'] +' problem');
         });
     }
 
     render() {
-        this.update();
         return (
             <div>
                 <div className="container-fluid" >
@@ -150,20 +192,15 @@ class ProblemItem extends Component {
                                 </div>
                                 <div className="card-body">
                                     <div className="row">
-                                        <div className="col-sm-4 col-md-4 col-lg-4">
-                                            <input id="file" type="file" className="btn btn-block btn-primary " onChange={this.uploadfile} ref={(ref) => this.fileUpload = ref}/>
-                                        </div>
-                                        <div className="col-sm-8 col-md-8 col-lg-8 d-flex align-items-center">
-                                            <div className="progress" style={{ height: 30 + 'px' }}>
-                                                <div className="progress-bar" role="progressbar" style={{ width: 0 + '%' }} aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                            </div>
+                                        <div className="col-sm-12 col-md-12 col-lg-12"> 
+                                            <input id="file" type="file" className="btn btn-block btn-primary " onChange={this.uploadfile.bind(this)} ref={(ref) => this.fileUpload = ref}/>
                                         </div>
                                     </div>
                                     <div style={divStyleHightLine} />
                                     <div className="row ">
                                         <div className="col-sm-8 col-md-8 col-lg-8" />
                                         <div className="col-sm-4 col-md-4 col-lg-4">
-                                            <button type="button" className="btn btn-block btn-success ">Send</button>
+                                            <button  onClick={this.handleSend} type="button" className="btn btn-block btn-success ">Send</button>
                                         </div>
                                     </div>
                                 </div>
@@ -173,7 +210,7 @@ class ProblemItem extends Component {
                                     <i className="fa fa-align-justify"></i> Result
                                 </div>
                                 <div className="card-body ">
-
+                                    {this.state.result}
                                 </div>
                             </div>
                         </div>

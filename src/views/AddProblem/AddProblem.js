@@ -54,7 +54,7 @@ class AddProblem extends Component {
                 description: '',
                 reqInput: '',
                 reqOutput: '',
-                testcase:[
+                testCase:[
                     {input :'', output: ''},
                     {input :'', output: ''},
                     {input :'', output: ''},
@@ -82,7 +82,7 @@ class AddProblem extends Component {
     updateTestCase(index, type, value) {
         console.log(this.state.problemData);
         this.setState((prev) => {
-            prev.problemData['testcase'][index][type] = value;
+            prev.problemData['testCase'][index][type] = value;
             return prev;
         })
     }
@@ -94,9 +94,9 @@ class AddProblem extends Component {
             this.state.problemData.reqInput !== '' &&
             this.state.problemData.reqOutput !== '')
             {
-                for(var i = 0; i < this.state.problemData.testcase.length; i++)
+                for(var i = 0; i < this.state.problemData.testCase.length; i++)
                 {
-                    if(!(this.state.problemData.testcase[i]['input'] && this.state.problemData.testcase[i]['output']))break;
+                    if(!(this.state.problemData.testCase[i]['input'] && this.state.problemData.testCase[i]['output']))break;
                 }
                 return true;
             }    
@@ -112,7 +112,7 @@ class AddProblem extends Component {
                 description: this.state.problemData.description,
                 reqInput: this.state.problemData.reqInput,
                 reqOutput: this.state.problemData.reqOutput,
-                testcase: this.state.problemData.testcase
+                testCase: this.state.problemData.testCase
             }).then((res) => {
                 swal(res.data);
             }).catch((err) => {
@@ -197,91 +197,91 @@ class AddProblem extends Component {
                     <div style={divStyleHeightLine} />
                     <div className="row">
                         <div className="col-6">
-                            <input type="text" value={this.state.problemData.testcase[0]['input']} onChange={(e) => this.updateTestCase(0, 'input', e.target.value)} class="form-control" placeholder="Input"/>  
+                            <input type="text" value={this.state.problemData.testCase[0]['input']} onChange={(e) => this.updateTestCase(0, 'input', e.target.value)} class="form-control" placeholder="Input"/>  
                         </div>
                         <div className="col-6">
-                            <input type="text" value={this.state.problemData.testcase[0]['output']} onChange={(e) => this.updateTestCase(0, 'output', e.target.value)} class="form-control" placeholder="Output"/> 
-                        </div>
-                    </div>
-                    <div style={divStyleHeightLine} />
-                    <div className="row">
-                        <div className="col-6">
-                            <input type="text" value={this.state.problemData.testcase[1]['input']} onChange={(e) => this.updateTestCase(1, 'input', e.target.value)} class="form-control" placeholder="Input"/>  
-                        </div>
-                        <div className="col-6">
-                            <input type="text" value={this.state.problemData.testcase[1]['output']} onChange={(e) => this.updateTestCase(1, 'output', e.target.value)} class="form-control" placeholder="Output"/> 
+                            <input type="text" value={this.state.problemData.testCase[0]['output']} onChange={(e) => this.updateTestCase(0, 'output', e.target.value)} class="form-control" placeholder="Output"/> 
                         </div>
                     </div>
                     <div style={divStyleHeightLine} />
                     <div className="row">
                         <div className="col-6">
-                            <input type="text" value={this.state.problemData.testcase[2]['input']} onChange={(e) => this.updateTestCase(2, 'input', e.target.value)} class="form-control" placeholder="Input"/>  
+                            <input type="text" value={this.state.problemData.testCase[1]['input']} onChange={(e) => this.updateTestCase(1, 'input', e.target.value)} class="form-control" placeholder="Input"/>  
                         </div>
                         <div className="col-6">
-                            <input type="text" value={this.state.problemData.testcase[2]['output']} onChange={(e) => this.updateTestCase(2, 'output', e.target.value)} class="form-control" placeholder="Output"/> 
-                        </div>
-                    </div>
-                    <div style={divStyleHeightLine} />
-                    <div className="row">
-                        <div className="col-6">
-                            <input type="text" value={this.state.problemData.testcase[3]['input']} onChange={(e) => this.updateTestCase(3, 'input', e.target.value)} class="form-control" placeholder="Input"/>  
-                        </div>
-                        <div className="col-6">
-                            <input type="text" value={this.state.problemData.testcase[3]['output']} onChange={(e) => this.updateTestCase(3, 'output', e.target.value)} class="form-control" placeholder="Output"/> 
+                            <input type="text" value={this.state.problemData.testCase[1]['output']} onChange={(e) => this.updateTestCase(1, 'output', e.target.value)} class="form-control" placeholder="Output"/> 
                         </div>
                     </div>
                     <div style={divStyleHeightLine} />
                     <div className="row">
                         <div className="col-6">
-                            <input type="text" value={this.state.problemData.testcase[4]['input']} onChange={(e) => this.updateTestCase(4, 'input', e.target.value)} class="form-control" placeholder="Input"/>  
+                            <input type="text" value={this.state.problemData.testCase[2]['input']} onChange={(e) => this.updateTestCase(2, 'input', e.target.value)} class="form-control" placeholder="Input"/>  
                         </div>
                         <div className="col-6">
-                            <input type="text" value={this.state.problemData.testcase[4]['output']} onChange={(e) => this.updateTestCase(4, 'output', e.target.value)} class="form-control" placeholder="Output"/> 
-                        </div>
-                    </div>
-                    <div style={divStyleHeightLine} />
-                    <div className="row">
-                        <div className="col-6">
-                            <input type="text" value={this.state.problemData.testcase[5]['input']} onChange={(e) => this.updateTestCase(5, 'input', e.target.value)} class="form-control" placeholder="Input"/>  
-                        </div>
-                        <div className="col-6">
-                            <input type="text" value={this.state.problemData.testcase[5]['output']} onChange={(e) => this.updateTestCase(5, 'output', e.target.value)} class="form-control" placeholder="Output"/> 
+                            <input type="text" value={this.state.problemData.testCase[2]['output']} onChange={(e) => this.updateTestCase(2, 'output', e.target.value)} class="form-control" placeholder="Output"/> 
                         </div>
                     </div>
                     <div style={divStyleHeightLine} />
                     <div className="row">
                         <div className="col-6">
-                            <input type="text" value={this.state.problemData.testcase[6]['input']} onChange={(e) => this.updateTestCase(6, 'input', e.target.value)} class="form-control" placeholder="Input"/>  
+                            <input type="text" value={this.state.problemData.testCase[3]['input']} onChange={(e) => this.updateTestCase(3, 'input', e.target.value)} class="form-control" placeholder="Input"/>  
                         </div>
                         <div className="col-6">
-                            <input type="text" value={this.state.problemData.testcase[6]['output']} onChange={(e) => this.updateTestCase(6, 'output', e.target.value)} class="form-control" placeholder="Output"/> 
-                        </div>
-                    </div>
-                    <div style={divStyleHeightLine} />
-                    <div className="row">
-                        <div className="col-6">
-                            <input type="text" value={this.state.problemData.testcase[7]['input']} onChange={(e) => this.updateTestCase(7, 'input', e.target.value)} class="form-control" placeholder="Input"/>  
-                        </div>
-                        <div className="col-6">
-                            <input type="text" value={this.state.problemData.testcase[7]['output']} onChange={(e) => this.updateTestCase(7, 'output', e.target.value)} class="form-control" placeholder="Output"/> 
+                            <input type="text" value={this.state.problemData.testCase[3]['output']} onChange={(e) => this.updateTestCase(3, 'output', e.target.value)} class="form-control" placeholder="Output"/> 
                         </div>
                     </div>
                     <div style={divStyleHeightLine} />
                     <div className="row">
                         <div className="col-6">
-                            <input type="text" value={this.state.problemData.testcase[8]['input']} onChange={(e) => this.updateTestCase(8, 'input', e.target.value)} class="form-control" placeholder="Input"/>  
+                            <input type="text" value={this.state.problemData.testCase[4]['input']} onChange={(e) => this.updateTestCase(4, 'input', e.target.value)} class="form-control" placeholder="Input"/>  
                         </div>
                         <div className="col-6">
-                            <input type="text" value={this.state.problemData.testcase[8]['output']} onChange={(e) => this.updateTestCase(8, 'output', e.target.value)} class="form-control" placeholder="Output"/> 
+                            <input type="text" value={this.state.problemData.testCase[4]['output']} onChange={(e) => this.updateTestCase(4, 'output', e.target.value)} class="form-control" placeholder="Output"/> 
                         </div>
                     </div>
                     <div style={divStyleHeightLine} />
                     <div className="row">
                         <div className="col-6">
-                            <input type="text" value={this.state.problemData.testcase[9]['input']} onChange={(e) => this.updateTestCase(9, 'input', e.target.value)} class="form-control" placeholder="Input"/>  
+                            <input type="text" value={this.state.problemData.testCase[5]['input']} onChange={(e) => this.updateTestCase(5, 'input', e.target.value)} class="form-control" placeholder="Input"/>  
                         </div>
                         <div className="col-6">
-                            <input type="text" value={this.state.problemData.testcase[9]['output']} onChange={(e) => this.updateTestCase(9, 'output', e.target.value)} class="form-control" placeholder="Output"/> 
+                            <input type="text" value={this.state.problemData.testCase[5]['output']} onChange={(e) => this.updateTestCase(5, 'output', e.target.value)} class="form-control" placeholder="Output"/> 
+                        </div>
+                    </div>
+                    <div style={divStyleHeightLine} />
+                    <div className="row">
+                        <div className="col-6">
+                            <input type="text" value={this.state.problemData.testCase[6]['input']} onChange={(e) => this.updateTestCase(6, 'input', e.target.value)} class="form-control" placeholder="Input"/>  
+                        </div>
+                        <div className="col-6">
+                            <input type="text" value={this.state.problemData.testCase[6]['output']} onChange={(e) => this.updateTestCase(6, 'output', e.target.value)} class="form-control" placeholder="Output"/> 
+                        </div>
+                    </div>
+                    <div style={divStyleHeightLine} />
+                    <div className="row">
+                        <div className="col-6">
+                            <input type="text" value={this.state.problemData.testCase[7]['input']} onChange={(e) => this.updateTestCase(7, 'input', e.target.value)} class="form-control" placeholder="Input"/>  
+                        </div>
+                        <div className="col-6">
+                            <input type="text" value={this.state.problemData.testCase[7]['output']} onChange={(e) => this.updateTestCase(7, 'output', e.target.value)} class="form-control" placeholder="Output"/> 
+                        </div>
+                    </div>
+                    <div style={divStyleHeightLine} />
+                    <div className="row">
+                        <div className="col-6">
+                            <input type="text" value={this.state.problemData.testCase[8]['input']} onChange={(e) => this.updateTestCase(8, 'input', e.target.value)} class="form-control" placeholder="Input"/>  
+                        </div>
+                        <div className="col-6">
+                            <input type="text" value={this.state.problemData.testCase[8]['output']} onChange={(e) => this.updateTestCase(8, 'output', e.target.value)} class="form-control" placeholder="Output"/> 
+                        </div>
+                    </div>
+                    <div style={divStyleHeightLine} />
+                    <div className="row">
+                        <div className="col-6">
+                            <input type="text" value={this.state.problemData.testCase[9]['input']} onChange={(e) => this.updateTestCase(9, 'input', e.target.value)} class="form-control" placeholder="Input"/>  
+                        </div>
+                        <div className="col-6">
+                            <input type="text" value={this.state.problemData.testCase[9]['output']} onChange={(e) => this.updateTestCase(9, 'output', e.target.value)} class="form-control" placeholder="Output"/> 
                         </div>
                     </div>
                     <div style={divStyleHeightLine} />

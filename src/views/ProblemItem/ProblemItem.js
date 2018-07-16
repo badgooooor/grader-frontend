@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import Axios from 'axios';
 import swal from 'sweetalert'; 
+import { DotLoader } from 'react-spinners';
 
 const divStyleHightLine = {
     height: '20px'
@@ -94,7 +95,8 @@ class ProblemItem extends Component {
             problem : {},
             uploadedCode : '',
             outputCase : [],
-            result : ''
+            result : '',
+            loading: false
         }
         this.update();
     }
@@ -132,6 +134,9 @@ class ProblemItem extends Component {
                 });
         }
         else{
+            this.setState({
+                loading: false
+            })
             console.log(output);
             console.log(output.length);
             let caseResult = '';
@@ -159,7 +164,8 @@ class ProblemItem extends Component {
         }
         else{
             this.setState({
-                output: this.sendTestCase( 0, [])
+                output: this.sendTestCase( 0, []),
+                loading: true
             })
         }
     }
@@ -192,7 +198,17 @@ class ProblemItem extends Component {
                                 </div>
                                 <div className="card-body">
                                     <div className="row">
-                                        <div className="col-sm-12 col-md-12 col-lg-12"> 
+                                        <div className="col-4" />
+                                        <div className="col-4">
+                                            <div className='sweet-loading'>
+                                                <DotLoader
+                                                color={'#123abc'} 
+                                                loading={this.state.loading} 
+                                                />
+                                            </div>
+                                        </div>
+                                        <div className="col-sm-12 col-md-12 col-lg-12">
+                                        <div style={divStyleHightLine} /> 
                                             <input id="file" type="file" className="btn btn-block btn-primary " onChange={this.uploadfile.bind(this)} ref={(ref) => this.fileUpload = ref}/>
                                         </div>
                                     </div>

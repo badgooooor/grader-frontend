@@ -15,13 +15,13 @@ const submitCount = {
 }
 // Get only user's submission.
 let mockLog = [
-    { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '2', result: 'PPPPP' },
-    { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '3', result: 'PP--P' },
-    { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '4', result: 'PPP--' },
-    { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '12', result: 'Timeout' },
-    { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '20', result: 'Memory' },
-    { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '2', result: 'Compile' },
-    { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '2', result: 'PPPPP' },
+    //{ submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '2', result: 'PPPPP' },
+    //{ submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '3', result: 'PP--P' },
+    //{ submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '4', result: 'PPP--' },
+    //{ submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '12', result: 'Timeout' },
+    //{ submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '20', result: 'Memory' },
+    //{ submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '2', result: 'Compile' },
+    //{ submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '2', result: 'PPPPP' },
 ]
 
 // Data + style in charts.
@@ -43,11 +43,11 @@ const lineDataStyle = {
 const barDataStyle = {
 
     labels: [
-        '1', '2', '3', '4', '5', '6', '7', '8', '9'
+       // '1', '2', '3', '4', '5', '6', '7', '8', '9'
     ],
     datasets: [{
         label: 'case',
-        data: [10, 10, 8, 6, 4, 3, 9, 10, 3],
+        data: [/*10, 10, 8, 6, 4, 3, 9, 10, 3*/],
         backgroundColor: '#ff6384',
         borderColor: '#778899',
         fill: false
@@ -62,13 +62,13 @@ var donutData = {
         'Passed'
     ],
     datasets: [{
-        data: [5, 6],
+        data: [/*5, 6*/],
         backgroundColor: [
             'rgba(230,255, 230, 0.7)',
             '#33ff33',
         ],
         hoverBackgroundColor: [
-            'rgba(230, 255, 230, 0.7)',
+        //    'rgba(230, 255, 230, 0.7)',
             '#33ff33',
         ]
     }]
@@ -255,7 +255,7 @@ class LogElement extends Component {
             <tr>
                 <td>{this.props.submitId}</td>
                 <td>{this.props.time}</td>
-                <td>{this.props.problemId}</td>
+                <td>{problems['problems'][this.props.problemId]['name']}</td>
                 <td>{this.props.result}</td>
             </tr>
         );
@@ -306,7 +306,7 @@ class SubmitTable extends Component {
                             </thead>
                             <tbody>
                                 {
-                                    mockLog.map((log, i) => <LogElement submitId={log.submitId} problemId={log.problemId} time={log.time} result={log.result} />)
+                                    mockLog.map((log, i) => <LogElement submitId={log.submitId} problemId={log.submitProblem} time={log.submitTime} result={log.result} />)
                                 }
                             </tbody>
                         </table>
@@ -351,7 +351,9 @@ class Dashboard extends Component {
                 console.log('err: listing problem');
         });
         Axios.get('http://127.0.0.1:3333/list_user_submit/'+ mockUser['username']).then(res => {
-            mockLog = res.data['logData'];    
+            mockLog = res.data['logData'];  
+            if(mockLog.length > 5)
+                mockLog = mockLog.slice(1,5);  
         }).catch( (err) => {
                 console.log('err: listing problem');
         });

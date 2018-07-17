@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Axios from 'axios';
 import swal from 'sweetalert'; 
 import { DotLoader } from 'react-spinners';
+var CryptoJS = require("crypto-js");
 
 const divStyleHightLine = {
     height: '20px'
@@ -18,10 +19,11 @@ let problemDetail = {
     //reqInput: 'Two integers',
     //reqOutput: 'Sum of inputs as integer'
 }
+
 let problemCases = [
-    { input: '1 2', output: '3' },
-    { input: '2 2', output: '4' },
-    { input: '5 4', output: '9' }
+    { input: '', output: '' },
+    { input: '', output: '' },
+    { input: '', output: '' }
 ]
 
 class DetailsCard extends Component {
@@ -87,18 +89,88 @@ class TestCase extends Component {
     }
 }
 
+class LogElement extends Component {
+    render() {
+        return (
+            <tr>
+                <td>{this.props.submitId}</td>
+                <td>{this.props.time}</td>
+                <td>{this.props.name}</td>
+                <td>{this.props.result}</td>
+            </tr>
+        );
+    }
+}
+
+class SubmitTable extends Component {
+
+    state = {
+        log : this.props.mockLog
+    }
+
+    componentDidMount() {
+        this.timer = setInterval(
+          () => this.update(),
+          2000
+        )
+    }
+    
+    componentWillUnmount() {
+        clearInterval(this.timer)
+    }
+
+    update(){
+        this.setState({
+            
+        });
+    }
+
+    render() {
+        return (
+            <div className="card" >
+                <div className="card-header">
+                    <i className="fa fa-align-justify"></i> Recently Process
+                </div>
+                <div className="card-body">
+                    <div className="table-responsive" id="myDIV">
+                        <table className="table table-striped">
+                            <thead className="thead-dark">
+                                <tr>
+                                    <th>#</th>
+                                    <th>Time</th>
+                                    <th>Sender</th>
+                                    <th>Result</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {
+                                    this.state.log.map((log, i) => <LogElement submitId={log.submitId} name={log.sender} time={log.submitTime} result={log.result} />)
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        );
+    }
+}
 
 class ProblemItem extends Component {
     constructor(props) {
         super(props);
         this.state = {
             problem : {},
+            mockLog : [{}],
             uploadedCode : '',
             outputCase : [],
-            result : '',
+            result : {},
             loading: false
         }
         this.update();
+    }
+
+    decryptPlainText(text){
+        return CryptoJS.AES.decrypt(text,'secret key 123nbt').toString(CryptoJS.enc.Utf8)
     }
     
     uploadfile = (e) => {
@@ -119,7 +191,7 @@ class ProblemItem extends Component {
 
     sendTestCase(caseIndex, output){
         console.log(caseIndex);
-        if(caseIndex < 10){
+        if(caseIndex < 2){
             Axios.post('http://127.0.0.1:3333/judge', {
                     source: this.state.uploadedCode,
                     input : this.state.problem['testCase'][caseIndex]['input']
@@ -149,10 +221,24 @@ class ProblemItem extends Component {
                     caseResult += '-';
                 }
             }
-            this.setState({
-                result : caseResult
-            });
-            swal("Upload success!", "success"); 
+            Axios.post('http://127.0.0.1:3333/add_submitlog', {
+                    sender: this.decryptPlainText(localStorage.getItem('U2FsdGVkX1+mSZ68YZV2YQ9pMNgBL/UQj1YOjaAxZn0=')),
+                    submitProblem: this.state.problem['problemId'],
+                    result: caseResult,
+                    processTime: output[output.length -1]['time'],
+                    processMemory: output[output.length -1]['memory']
+                }).then((ms) => {
+                    Axios.get('http://127.0.0.1:3333/list_problem_submit/' + this.state.problem['problemId']).then(res => {
+                        this.state.mockLog[0] = res.data['logData'][res.data['logData'].length - 1];
+                        console.log(this.state.mockLog);
+                        swal("Upload success!", "success"); 
+                    }).catch( (err) => {
+                        console.log('err: get listing submited log');
+                    });
+                }).catch((ms) => {
+                    swal("Submit failed!", "error");
+                    return []
+                });
         }
         return output;
     }
@@ -174,8 +260,9 @@ class ProblemItem extends Component {
         Axios.get('http://127.0.0.1:3333/get_problem/' + this.props.location.state['id']).then(res => {
             this.setState({
                 problem : res.data[0]
-            })
+            });
             problemCases = this.state.problem['testCase'];
+            this.setState({});
         }).catch( (err) => {
             console.log('err: get '+ this.props.location.state['id'] +' problem');
         });
@@ -226,7 +313,7 @@ class ProblemItem extends Component {
                                     <i className="fa fa-align-justify"></i> Result
                                 </div>
                                 <div className="card-body ">
-                                    {this.state.result}
+                                    <SubmitTable mockLog={this.state.mockLog}/>
                                 </div>
                             </div>
                         </div>

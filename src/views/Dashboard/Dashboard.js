@@ -369,7 +369,8 @@ class Dashboard extends Component {
         });
         Axios.get(backendURL + '/list_user_submit/'+ mockUser['username']).then(res => {
             let tempMockLog = res.data['logData'];
-            for(let i = mockLog.length -1, j = 0; j<5 && i >= 0; i--){
+            console.log(tempMockLog);
+            for(let i = tempMockLog.length -1, j = 0; j<5 && i >= 0; i--){
                 console.log(mockLog);
                 mockLog[j] =  tempMockLog[i];
                 j++;

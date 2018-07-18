@@ -232,7 +232,61 @@ class ProblemItem extends Component {
                     Axios.get(backendURL + '/list_problem_submit/' + this.state.problem['problemId']).then(res => {
                         this.state.mockLog[0] = res.data['logData'][res.data['logData'].length - 1];
                         console.log(this.state.mockLog);
-                        swal("Upload success!", "success"); 
+                        Axios.get(backendURL + '/get_user/' + this.decryptPlainText(localStorage.getItem('U2FsdGVkX1+mSZ68YZV2YQ9pMNgBL/UQj1YOjaAxZn0='))).then(res => {
+                            console.log(res.data[0]["problemSolved"]);
+                            let problemJustSolved = res.data[0]["problemSolved"];
+                            const findProblem = problemJustSolved.find( detail => detail.id === this.state.problem['problemId']);
+                            let passedCount = 0;
+                            let addCount = 0;
+                            for(let i = 0; i < caseResult.length; i++) 
+                                if(caseResult[i] === 'P')passedCount++;
+                            // None history user 
+                            if(problemJustSolved.indexOf(findProblem) < 0){
+                                problemJustSolved.push({
+                                    "id": this.state.problem['problemId'],
+                                    "solved": (passedCount === caseResult.length),
+                                    "solveCount": passedCount
+                                })
+                                if(passedCount === caseResult.length)
+                                    addCount = 1;
+                            }
+                            //History User
+                            else{
+                                problemJustSolved[problemJustSolved.indexOf(findProblem)] = {
+                                    "id": this.state.problem['problemId'],
+                                    "solved": (passedCount === caseResult.length),
+                                    "solveCount": passedCount
+                                }
+                                //This time passed
+                                if((passedCount === caseResult.length) && !this.state.problem['problemId']['solved']){
+                                    addCount = 1;
+                                }
+                                //This time failed
+                                else if(!(passedCount === caseResult.length) && this.state.problem['problemId']['solved']){
+                                    addCount = -1;
+                                }
+                            }
+                            Axios.post(backendURL + '/update_problem/' + this.state.problem['problemId'], {
+                                passedCount : (this.state.problem['passedCount'] + addCount)
+                            }).then(res =>{    
+                                console.log(res)
+                            }).catch((err) => {
+                                swal("Update problem failed!", "error");
+                                return []
+                            });
+
+                            Axios.post(backendURL + '/update_user/' + this.decryptPlainText(localStorage.getItem('U2FsdGVkX1+mSZ68YZV2YQ9pMNgBL/UQj1YOjaAxZn0=')), {
+                                problemSolved: problemJustSolved
+                                }).then((res) => {
+                                    console.log(res.data);
+                                    swal("Upload success!", "success"); 
+                                }).catch((err) => {
+                                    swal("Update user failed!", "error");
+                                    return []
+                                });
+                        }).catch( (err) => {
+                            console.log('err: get user');
+                        });
                     }).catch( (err) => {
                         console.log('err: get listing submited log');
                     });

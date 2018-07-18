@@ -3,6 +3,7 @@ import React, { Component } from 'react';
 import { Button } from 'reactstrap';
 import Axios from 'axios';
 import swal from 'sweetalert';
+const backendURL = "http://127.0.0.1:3333";
 
 const divStyleHeightLine = {
     height: '20px'
@@ -106,7 +107,7 @@ class AddProblem extends Component {
     handleSubmit = (e) => {
         e.preventDefault();
         if(this.isFormComplete()){
-            Axios.post('http://127.0.0.1:3333/add_problem', {
+            Axios.post(backendURL + '/add_problem', {
                 name: this.state.problemData.name,
                 difficulty: this.state.problemData.difficulty,
                 description: this.state.problemData.description,

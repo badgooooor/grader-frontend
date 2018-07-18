@@ -4,6 +4,7 @@ import { Form } from 'reactstrap';
 import image from '../../background-1.jpg'
 import Axios from 'axios';
 import swal from 'sweetalert';
+const backendURL = "http://127.0.0.1:3333";
 
 var CryptoJS = require("crypto-js");
 
@@ -78,7 +79,7 @@ class Login extends Component {
 
         // Waiting for edit with server
         if (completed) {
-            Axios.post('http://127.0.0.1:3333/add_users', {
+            Axios.post(backendURL + '/add_users', {
                 username: regisData.username,
                 password: regisData.password,
                 email: regisData.email
@@ -99,7 +100,7 @@ class Login extends Component {
         e.preventDefault();
         if (this.state.loginData.password && this.state.loginData.username) {
             // console.log(this.state.loginData);
-            Axios.post('http://127.0.0.1:3333/check_users', {
+            Axios.post(backendURL + '/check_users', {
                 username: this.state.loginData.username,
                 password: this.state.loginData.password
             }).then((res) => {

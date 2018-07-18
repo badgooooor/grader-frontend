@@ -5,6 +5,7 @@ import { Doughnut, Line, Bar } from 'react-chartjs-2';
 
 var CryptoJS = require("crypto-js");
 
+const backendURL = "http://127.0.0.1:3333";
 // Mock-up Data.
 var mockUser = {
     username: '',
@@ -340,17 +341,17 @@ class Dashboard extends Component {
     
     update(){
         mockUser['username'] = this.decryptPlainText(localStorage.getItem('U2FsdGVkX1+mSZ68YZV2YQ9pMNgBL/UQj1YOjaAxZn0='));
-        Axios.get('http://127.0.0.1:3333/get_user/' + mockUser['username']).then(res => {
+        Axios.get(backendURL + '/get_user/' + mockUser['username']).then(res => {
             mockUser = res.data[0];
         }).catch( (err) => {
                 console.log('err: listing problem');
         });
-        Axios.get('http://127.0.0.1:3333/list_problem/').then(res => {
+        Axios.get(backendURL + '/list_problem/').then(res => {
             problems = res.data;
         }).catch( (err) => {
                 console.log('err: listing problem');
         });
-        Axios.get('http://127.0.0.1:3333/list_user_submit/'+ mockUser['username']).then(res => {
+        Axios.get(backendURL + '/list_user_submit/'+ mockUser['username']).then(res => {
             mockLog = res.data['logData'];  
             if(mockLog.length > 5)
                 mockLog = mockLog.slice(1,5);  

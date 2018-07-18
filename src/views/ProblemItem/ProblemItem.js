@@ -3,6 +3,7 @@ import Axios from 'axios';
 import swal from 'sweetalert'; 
 import { DotLoader } from 'react-spinners';
 var CryptoJS = require("crypto-js");
+const backendURL = "http://127.0.0.1:3333";
 
 const divStyleHightLine = {
     height: '20px'
@@ -191,8 +192,8 @@ class ProblemItem extends Component {
 
     sendTestCase(caseIndex, output){
         console.log(caseIndex);
-        if(caseIndex < 2){
-            Axios.post('http://127.0.0.1:3333/judge', {
+        if((caseIndex < this.state.problem['testCase'].length) && (this.state.problem['testCase'][caseIndex]['input'] !== '')){
+            Axios.post(backendURL + '/judge', {
                     source: this.state.uploadedCode,
                     input : this.state.problem['testCase'][caseIndex]['input']
                 }).then((ms) => {
@@ -221,14 +222,14 @@ class ProblemItem extends Component {
                     caseResult += '-';
                 }
             }
-            Axios.post('http://127.0.0.1:3333/add_submitlog', {
+            Axios.post(backendURL + '/add_submitlog', {
                     sender: this.decryptPlainText(localStorage.getItem('U2FsdGVkX1+mSZ68YZV2YQ9pMNgBL/UQj1YOjaAxZn0=')),
                     submitProblem: this.state.problem['problemId'],
                     result: caseResult,
                     processTime: output[output.length -1]['time'],
                     processMemory: output[output.length -1]['memory']
                 }).then((ms) => {
-                    Axios.get('http://127.0.0.1:3333/list_problem_submit/' + this.state.problem['problemId']).then(res => {
+                    Axios.get(backendURL + '/list_problem_submit/' + this.state.problem['problemId']).then(res => {
                         this.state.mockLog[0] = res.data['logData'][res.data['logData'].length - 1];
                         console.log(this.state.mockLog);
                         swal("Upload success!", "success"); 
@@ -257,7 +258,7 @@ class ProblemItem extends Component {
     }
 
     update(){
-        Axios.get('http://127.0.0.1:3333/get_problem/' + this.props.location.state['id']).then(res => {
+        Axios.get(backendURL + '/get_problem/' + this.props.location.state['id']).then(res => {
             this.setState({
                 problem : res.data[0]
             });

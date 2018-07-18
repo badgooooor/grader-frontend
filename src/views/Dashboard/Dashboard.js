@@ -16,11 +16,12 @@ const submitCount = {
 }
 // Get only user's submission.
 let mockLog = [
-    //{ submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '2', result: 'PPPPP' },
-    //{ submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '3', result: 'PP--P' },
-    //{ submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '4', result: 'PPP--' },
-    //{ submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '12', result: 'Timeout' },
-    //{ submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '20', result: 'Memory' },
+    { },
+    { },
+    { },
+    { },
+    { },
+    //{ submitId: 0, time: 0, user: '', problemId: 0, result: '' }
     //{ submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '2', result: 'Compile' },
     //{ submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '2', result: 'PPPPP' },
 ]
@@ -76,7 +77,16 @@ var donutData = {
 
 }
 
-let problems;
+let problems ={
+    "problems": [
+        {
+            "name": "",
+            "difficulty": "",
+            "passedCount": 0,
+            "problemId": 0
+        }
+    ]
+}
 
 //stlye
 const divStyleHeightLine = {
@@ -251,12 +261,16 @@ class UserSolvedCount extends Component {
     }
 }
 class LogElement extends Component {
+    constructor(props){
+        super(props)
+    }
     render() {
+        console.log(problems);
         return (
             <tr>
                 <td>{this.props.submitId}</td>
                 <td>{this.props.time}</td>
-                <td>{problems['problems'][this.props.problemId]['name']}</td>
+                <td>{problems['problems'][0]['name']}</td>
                 <td>{this.props.result}</td>
             </tr>
         );
@@ -289,6 +303,7 @@ class SubmitTable extends Component {
 
 
     render() {
+        console.log(mockLog);
         return (
             <div className="card" >
                 <div className="card-header">
@@ -307,7 +322,7 @@ class SubmitTable extends Component {
                             </thead>
                             <tbody>
                                 {
-                                    mockLog.map((log, i) => <LogElement submitId={log.submitId} problemId={log.submitProblem} time={log.submitTime} result={log.result} />)
+                                    mockLog.map((log) => <LogElement submitId={log.submitId} problemId={log.submitProblem} time={log.submitTime} result={log.result} />)
                                 }
                             </tbody>
                         </table>
@@ -348,15 +363,20 @@ class Dashboard extends Component {
         });
         Axios.get(backendURL + '/list_problem/').then(res => {
             problems = res.data;
+            console.log(problems);
         }).catch( (err) => {
                 console.log('err: listing problem');
         });
         Axios.get(backendURL + '/list_user_submit/'+ mockUser['username']).then(res => {
-            mockLog = res.data['logData'];  
-            if(mockLog.length > 5)
-                mockLog = mockLog.slice(1,5);  
+            let tempMockLog = res.data['logData'];
+            for(let i = mockLog.length -1, j = 0; j<5 && i >= 0; i--){
+                console.log(mockLog);
+                mockLog[j] =  tempMockLog[i];
+                j++;
+            }
+            console.log(mockLog);
         }).catch( (err) => {
-                console.log('err: listing problem');
+                console.log('err: listing Log');
         });
 
     }

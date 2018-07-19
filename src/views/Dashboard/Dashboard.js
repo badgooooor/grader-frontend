@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import Axios from 'axios';
 
 import { Doughnut, Line, Bar } from 'react-chartjs-2';
+import { isNullOrUndefined } from 'util';
 
 var CryptoJS = require("crypto-js");
 
@@ -79,14 +80,11 @@ var donutData = {
 
 let problems ={
     "problems": [
-        {
-            "name": "",
-            "difficulty": "",
-            "passedCount": 0,
-            "problemId": 0
-        }
+        {"name": "", "difficulty": "", "passedCount": 0, "problemId": 0}
     ]
 }
+
+let userList = [];
 
 //stlye
 const divStyleHeightLine = {
@@ -137,7 +135,7 @@ class UserCard extends Component {
             <div className="col-sm-6 col-md-5 col-lg-6">
                 <div className="card">
                     <div className="card-header">
-                        <i className="fa fa-align-justify"></i> {this.state.user.username}
+                        <i className="fa fa-align-justify"></i><b>{this.state.user.username}</b>
                     </div>
                     <div className="card-body">
                         <Doughnut data={this.state.douData} options={{ maintainAspectRatio: false, legend: { position: 'right' } }} width={this.props.width} height={262} />
@@ -199,7 +197,7 @@ class SubmissionCard extends Component{
         <div className="col-sm-6 col-md-5 col-lg-6">
             <div className="card">
                 <div className="card-header">
-                    <i className="fa fa-align-justify"></i> {this.state.cardName}
+                    <i className="fa fa-align-justify"></i><b> {this.state.cardName} </b>
                 </div>
                 <div className="card-body">
                     <Line data={this.state.lineData} options={{ responsive: true, maintainAspectRatio: false, legend: { position: 'right' } }} width={this.props.width} onChange={this.changeHandler} height={262} />
@@ -251,7 +249,7 @@ class UserSolvedCount extends Component {
         return (
             <div className="card">
                 <div className="card-header">
-                    <i className="fa fa-align-justify"></i> Personal passed task
+                    <i className="fa fa-align-justify"></i><b> Personal passed task</b>
                                 </div>
                 <div className="card-body ">
                     <Bar data={this.state.barData} options={{ maintainAspectRatio: false, legend: { position: 'right' } }} width={this.props.width} height={262} />
@@ -264,13 +262,16 @@ class LogElement extends Component {
     constructor(props){
         super(props)
     }
+    showProblemName=(e)=>{
+        if(!isNullOrUndefined(this.props.problemId))
+            return problems['problems'][this.props.problemId]['name']
+    }
     render() {
-        console.log(problems);
         return (
             <tr>
                 <td>{this.props.submitId}</td>
                 <td>{this.props.time}</td>
-                <td>{problems['problems'][0]['name']}</td>
+                <td>{this.showProblemName()}</td>
                 <td>{this.props.result}</td>
             </tr>
         );
@@ -307,7 +308,7 @@ class SubmitTable extends Component {
         return (
             <div className="card" >
                 <div className="card-header">
-                    <i className="fa fa-align-justify"></i> Recently Process
+                    <i className="fa fa-align-justify"></i><b> Recently Process</b>
                 </div>
                 <div className="card-body">
                     <div className="table-responsive" id="myDIV">
@@ -329,6 +330,111 @@ class SubmitTable extends Component {
                     </div>
                 </div>
             </div>
+        );
+    }
+}
+
+class UserElement extends Component {
+    constructor(props){
+        super(props)
+    }
+    render() {
+        return (
+            <tr>
+                <td>{this.props.name}</td>
+                <td>{this.props.score}</td>
+            </tr>
+        );
+    }
+}
+
+class RankTable extends Component {
+    constructor(props){
+        super(props)
+        this.getUserList()
+        this.state = {
+            rankList : <p/>
+        }
+    }
+
+    componentDidMount() {
+        this.timer = setInterval(
+          () => this.update(),
+          2000
+        )
+    }
+    
+    componentWillUnmount() {
+        clearInterval(this.timer)
+    }
+
+    update(){
+        this.setState({
+            update : true,
+            rankList : this.showUserList()
+        });
+    }
+
+    checkScore(problemSolved){
+        console.log(problemSolved);
+        let countPassed = 0;
+        for(let i = 0; i < problemSolved.length; i++){
+            if(problemSolved[i]['solved'])countPassed++
+        }
+        console.log(countPassed)
+        return countPassed
+    }
+
+    getUserList(){
+        Axios.get(backendURL + '/list_user/').then(res => {
+            let tempUser = [];
+            for(let i = 0; i < res.data['users'].length; i++){
+                tempUser[i] = {
+                    username : res.data['users'][i]['username'],
+                    problemSolved :  res.data['users'][i]['problemSolved'],
+                    score : this.checkScore(res.data['users'][i]['problemSolved'])
+                }
+            }
+            tempUser.sort(function(a,b){
+                return(-(a.score - b.score));
+            })
+            if(tempUser > 5)userList = tempUser.slice(1,5);
+            else userList = tempUser;
+            console.log(userList)
+        }).catch( (err) => {
+                console.log('err: listing user');
+        });
+    }
+
+    showUserList =(e) =>{
+        if(!isNullOrUndefined(userList)){
+            console.log(userList)
+            return  userList.map((user) => <UserElement name={user.username} score={user.score} />)
+        }
+        return <p/>
+    }
+    render() {
+        return (
+            <div className="card" >
+                <div className="card-header d-flex justify-content-center">
+                    <i className="fal fa-align-center"></i><b> Top </b>
+                </div>
+                <div className="card-body">
+                    <div className="table-responsive" id="myDIV">
+                        <table className="table table-striped">
+                            <thead>
+                                <tr>
+                                    <th>User</th>
+                                    <th><span class="cui-check" /></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.rankList}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>                    
         );
     }
 }
@@ -364,20 +470,20 @@ class Dashboard extends Component {
         Axios.get(backendURL + '/list_problem/').then(res => {
             problems = res.data;
             console.log(problems);
+            Axios.get(backendURL + '/list_user_submit/'+ mockUser['username']).then(res => {
+                let tempMockLog = res.data['logData'];
+                console.log(tempMockLog);
+                for(let i = tempMockLog.length -1, j = 0; j<5 && i >= 0; i--){
+                    console.log(mockLog);
+                    mockLog[j] =  tempMockLog[i];
+                    j++;
+                }
+                console.log(mockLog);
+            }).catch( (err) => {
+                    console.log('err: listing Log');
+            });
         }).catch( (err) => {
                 console.log('err: listing problem');
-        });
-        Axios.get(backendURL + '/list_user_submit/'+ mockUser['username']).then(res => {
-            let tempMockLog = res.data['logData'];
-            console.log(tempMockLog);
-            for(let i = tempMockLog.length -1, j = 0; j<5 && i >= 0; i--){
-                console.log(mockLog);
-                mockLog[j] =  tempMockLog[i];
-                j++;
-            }
-            console.log(mockLog);
-        }).catch( (err) => {
-                console.log('err: listing Log');
         });
 
     }
@@ -400,41 +506,7 @@ class Dashboard extends Component {
                             <UserSolvedCount />
                         </div>
                         <div className="col-sm-2 col-md-2 col-lg-2">
-                            <div className="card" >
-                                <div className="card-header d-flex justify-content-center">
-                                    <i className="fal fa-align-center"></i> Top
-                                </div>
-                                <div className="card-body">
-                                    <div className="table-responsive" id="myDIV">
-                                        <table className="table table-striped">
-                                            <thead>
-                                                <tr>
-                                                    <th>User</th>
-                                                    <th><span class="cui-check" /></th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Franxx</td>
-                                                    <td>99</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Franxx</td>
-                                                    <td>99</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Franxx</td>
-                                                    <td>99</td>
-                                                </tr>
-                                                <tr>
-                                                    <td>Franxx</td>
-                                                    <td>99</td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
-                                    </div>
-                                </div>
-                            </div>
+                            <RankTable/>
                         </div>
                     </div>
                     <div className="footerSpace" style={divStyleHeight} />

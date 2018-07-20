@@ -398,7 +398,7 @@ class RankTable extends Component {
             tempUser.sort(function(a,b){
                 return(-(a.score - b.score));
             })
-            if(tempUser > 5)userList = tempUser.slice(1,5);
+            if(tempUser.length >= 5)userList = tempUser.slice(1,6);
             else userList = tempUser;
             console.log(userList)
         }).catch( (err) => {

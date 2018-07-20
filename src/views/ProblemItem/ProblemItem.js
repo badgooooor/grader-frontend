@@ -36,9 +36,9 @@ class DetailsCard extends Component {
         return (
             <div className="card">
                 <div className="card-header">
-                    <i className="fa fa-align-justify">#{this.props.problem['problemId']}</i>
+                    <i className="fa fa-align-justify"><b>#{this.props.problem['problemId']}</b></i>
                     <div className="col">
-                        <i className="fa fa-align-justify">{this.props.problem['name']}</i>    
+                        <i className="fa fa-align-justify"><b>{this.props.problem['name']}</b></i>    
                     </div>    
                 </div>
                 <div className="card-body">
@@ -69,7 +69,7 @@ class TestCase extends Component {
     render() {
         return (
             <div className="card">
-                <div className="card-header">Test Cases</div>
+                <div className="card-header"><b>Test Cases</b></div>
                 <div className="card-body">
                     <table className="table table-responsive-sm">
                         <thead>
@@ -128,30 +128,24 @@ class SubmitTable extends Component {
 
     render() {
         return (
-            <div className="card" >
-                <div className="card-header">
-                    <i className="fa fa-align-justify"></i> Recently Process
-                </div>
-                <div className="card-body">
-                    <div className="table-responsive" id="myDIV">
-                        <table className="table table-striped">
-                            <thead className="thead-dark">
-                                <tr>
-                                    <th>#</th>
-                                    <th>Time</th>
-                                    <th>Sender</th>
-                                    <th>Result</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    this.state.log.map((log, i) => <LogElement submitId={log.submitId} name={log.sender} time={log.submitTime} result={log.result} />)
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
+            <div className="table-responsive" id="myDIV">
+                <table className="table table-striped">
+                    <thead className="thead-dark">
+                        <tr>
+                            <th>#</th>
+                            <th>Time</th>
+                            <th>Sender</th>
+                            <th>Result</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {
+                        this.state.log.map((log, i) => <LogElement submitId={log.submitId} name={log.sender} time={log.submitTime} result={log.result} />)
+                        }
+                    </tbody>
+                </table>
+            </div> 
+                    
         );
     }
 }
@@ -203,6 +197,7 @@ class ProblemItem extends Component {
                 }).catch((ms) => {
                     console.log(caseIndex)
                     swal("Upload failed!", "error");
+                    this.setState({loading: false});
                     return []
                 });
         }
@@ -252,19 +247,23 @@ class ProblemItem extends Component {
                             }
                             //History User
                             else{
+                                console.log(passedCount === caseResult.length)
+                                console.log(problemJustSolved[problemJustSolved.indexOf(findProblem)]['solved']);
+                                console.log()
+                                //This time passed
+                                if((passedCount === caseResult.length) && !problemJustSolved[problemJustSolved.indexOf(findProblem)]['solved']){
+                                    addCount = 1;
+                                }
+                                //This time failed
+                                else if(!(passedCount === caseResult.length) && problemJustSolved[problemJustSolved.indexOf(findProblem)]['solved']){
+                                    addCount = -1;
+                                }
                                 problemJustSolved[problemJustSolved.indexOf(findProblem)] = {
                                     "id": this.state.problem['problemId'],
                                     "solved": (passedCount === caseResult.length),
                                     "solveCount": passedCount
                                 }
-                                //This time passed
-                                if((passedCount === caseResult.length) && !this.state.problem['problemId']['solved']){
-                                    addCount = 1;
-                                }
-                                //This time failed
-                                else if(!(passedCount === caseResult.length) && this.state.problem['problemId']['solved']){
-                                    addCount = -1;
-                                }
+                                
                             }
                             Axios.post(backendURL + '/update_problem/' + this.state.problem['problemId'], {
                                 passedCount : (this.state.problem['passedCount'] + addCount)
@@ -272,6 +271,7 @@ class ProblemItem extends Component {
                                 console.log(res)
                             }).catch((err) => {
                                 swal("Update problem failed!", "error");
+                                this.setState({loading: false});
                                 return []
                             });
 
@@ -282,6 +282,7 @@ class ProblemItem extends Component {
                                     swal("Upload success!", "success"); 
                                 }).catch((err) => {
                                     swal("Update user failed!", "error");
+                                    this.setState({loading: false});
                                     return []
                                 });
                         }).catch( (err) => {
@@ -292,6 +293,7 @@ class ProblemItem extends Component {
                     });
                 }).catch((ms) => {
                     swal("Submit failed!", "error");
+                    this.setState({loading: false});
                     return []
                 });
         }
@@ -336,7 +338,7 @@ class ProblemItem extends Component {
                         <div className="col-sm-4 col-md-4 col-lg-4">
                             <div className="card">
                                 <div className="card-header">
-                                    <i className="fa fa-align-justify"></i> Submission
+                                    <i className="fa fa-align-justify"></i><b> Submission</b>
                                 </div>
                                 <div className="card-body">
                                     <div className="row">
@@ -365,7 +367,7 @@ class ProblemItem extends Component {
                             </div>
                             <div className="card">
                                 <div className="card-header">
-                                    <i className="fa fa-align-justify"></i> Result
+                                    <i className="fa fa-align-justify"></i><b> Result</b>
                                 </div>
                                 <div className="card-body ">
                                     <SubmitTable mockLog={this.state.mockLog}/>

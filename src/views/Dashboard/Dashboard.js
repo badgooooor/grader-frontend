@@ -5,6 +5,7 @@ import { Doughnut, Line, Bar } from 'react-chartjs-2';
 
 var CryptoJS = require("crypto-js");
 
+const backendURL = "http://127.0.0.1:3333";
 // Mock-up Data.
 var mockUser = {
     username: '',
@@ -15,13 +16,14 @@ const submitCount = {
 }
 // Get only user's submission.
 let mockLog = [
-    { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '2', result: 'PPPPP' },
-    { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '3', result: 'PP--P' },
-    { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '4', result: 'PPP--' },
-    { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '12', result: 'Timeout' },
-    { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '20', result: 'Memory' },
-    { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '2', result: 'Compile' },
-    { submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '2', result: 'PPPPP' },
+    { },
+    { },
+    { },
+    { },
+    { },
+    //{ submitId: 0, time: 0, user: '', problemId: 0, result: '' }
+    //{ submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '2', result: 'Compile' },
+    //{ submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '2', result: 'PPPPP' },
 ]
 
 // Data + style in charts.
@@ -43,11 +45,11 @@ const lineDataStyle = {
 const barDataStyle = {
 
     labels: [
-        '1', '2', '3', '4', '5', '6', '7', '8', '9'
+       // '1', '2', '3', '4', '5', '6', '7', '8', '9'
     ],
     datasets: [{
         label: 'case',
-        data: [10, 10, 8, 6, 4, 3, 9, 10, 3],
+        data: [/*10, 10, 8, 6, 4, 3, 9, 10, 3*/],
         backgroundColor: '#ff6384',
         borderColor: '#778899',
         fill: false
@@ -62,20 +64,29 @@ var donutData = {
         'Passed'
     ],
     datasets: [{
-        data: [5, 6],
+        data: [/*5, 6*/],
         backgroundColor: [
             'rgba(230,255, 230, 0.7)',
             '#33ff33',
         ],
         hoverBackgroundColor: [
-            'rgba(230, 255, 230, 0.7)',
+        //    'rgba(230, 255, 230, 0.7)',
             '#33ff33',
         ]
     }]
 
 }
 
-let problems;
+let problems ={
+    "problems": [
+        {
+            "name": "",
+            "difficulty": "",
+            "passedCount": 0,
+            "problemId": 0
+        }
+    ]
+}
 
 //stlye
 const divStyleHeightLine = {
@@ -250,12 +261,16 @@ class UserSolvedCount extends Component {
     }
 }
 class LogElement extends Component {
+    constructor(props){
+        super(props)
+    }
     render() {
+        console.log(problems);
         return (
             <tr>
                 <td>{this.props.submitId}</td>
                 <td>{this.props.time}</td>
-                <td>{this.props.problemId}</td>
+                <td>{problems['problems'][0]['name']}</td>
                 <td>{this.props.result}</td>
             </tr>
         );
@@ -288,6 +303,7 @@ class SubmitTable extends Component {
 
 
     render() {
+        console.log(mockLog);
         return (
             <div className="card" >
                 <div className="card-header">
@@ -306,7 +322,7 @@ class SubmitTable extends Component {
                             </thead>
                             <tbody>
                                 {
-                                    mockLog.map((log, i) => <LogElement submitId={log.submitId} problemId={log.problemId} time={log.time} result={log.result} />)
+                                    mockLog.map((log) => <LogElement submitId={log.submitId} problemId={log.submitProblem} time={log.submitTime} result={log.result} />)
                                 }
                             </tbody>
                         </table>
@@ -340,20 +356,28 @@ class Dashboard extends Component {
     
     update(){
         mockUser['username'] = this.decryptPlainText(localStorage.getItem('U2FsdGVkX1+mSZ68YZV2YQ9pMNgBL/UQj1YOjaAxZn0='));
-        Axios.get('http://127.0.0.1:3333/get_user/' + mockUser['username']).then(res => {
+        Axios.get(backendURL + '/get_user/' + mockUser['username']).then(res => {
             mockUser = res.data[0];
         }).catch( (err) => {
                 console.log('err: listing problem');
         });
-        Axios.get('http://127.0.0.1:3333/list_problem/').then(res => {
+        Axios.get(backendURL + '/list_problem/').then(res => {
             problems = res.data;
+            console.log(problems);
         }).catch( (err) => {
                 console.log('err: listing problem');
         });
-        Axios.get('http://127.0.0.1:3333/list_user_submit/'+ mockUser['username']).then(res => {
-            mockLog = res.data['logData'];    
+        Axios.get(backendURL + '/list_user_submit/'+ mockUser['username']).then(res => {
+            let tempMockLog = res.data['logData'];
+            console.log(tempMockLog);
+            for(let i = tempMockLog.length -1, j = 0; j<5 && i >= 0; i--){
+                console.log(mockLog);
+                mockLog[j] =  tempMockLog[i];
+                j++;
+            }
+            console.log(mockLog);
         }).catch( (err) => {
-                console.log('err: listing problem');
+                console.log('err: listing Log');
         });
 
     }

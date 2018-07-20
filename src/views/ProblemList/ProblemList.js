@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Axios from 'axios';
 
+const backendURL = "http://127.0.0.1:3333";
+
 let mockUpData = [
     //{ problemId: 1, name: 'A+B', difficulty: 'Easy', passedCount: 143 },
     //{ problemId: 2, name: 'Recursive', difficulty: 'Hard', passedCount: 12 },
@@ -91,7 +93,7 @@ class ProblemList extends Component {
     }
     
     update(){
-        Axios.get('http://127.0.0.1:3333/list_problem/').then(res => {
+        Axios.get(backendURL + '/list_problem/').then(res => {
             mockUpData = res.data['problems'];
             this.setState({
                 query: this.SearchBar.value

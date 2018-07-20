@@ -7,6 +7,7 @@ import Footer from '../../components/Footer/';
 import Dashboard from '../../views/Dashboard/';
 import Problem from '../../views/Problems';
 import AddProblem from '../../views/AddProblem';
+import EditProblem from '../../views/EditProblem';
 
 class Home extends Component {
 
@@ -18,7 +19,8 @@ class Home extends Component {
                     <div className="container-fluid">
                         <Switch>              
                             <Route path="/problems" component={Problem}/>
-                            <Route path="/addproblem" component={AddProblem} />            
+                            <Route path="/addproblem" component={AddProblem} />
+                            <Route path="/editproblem" component={EditProblem} />              
                             <Route path="/" component={Dashboard} />
                             <Redirect from="/" to="/dashboard" /> 
                             

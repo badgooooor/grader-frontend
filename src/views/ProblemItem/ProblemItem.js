@@ -55,8 +55,8 @@ class TestItem extends Component {
     render() {
         return (
             <tr>
-                <td>{this.props.input}</td>
-                <td>{this.props.output}</td>
+                <td><pre>{this.props.input}</pre></td>
+                <td><pre>{this.props.output}</pre></td>
             </tr>
         );
     }
@@ -192,7 +192,7 @@ class ProblemItem extends Component {
 
     sendTestCase(caseIndex, output){
         console.log(caseIndex);
-        if((caseIndex < this.state.problem['testCase'].length) && (this.state.problem['testCase'][caseIndex]['input'] !== '')){
+        if((caseIndex < this.state.problem['testCase'].length) && (this.state.problem['testCase'][caseIndex]['output'] !== '')){
             Axios.post(backendURL + '/judge', {
                     source: this.state.uploadedCode,
                     input : this.state.problem['testCase'][caseIndex]['input']

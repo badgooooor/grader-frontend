@@ -41,15 +41,13 @@ class Testcase extends Component {
     }
 }
 
-class ReqIO extends Component {
-
-}
 class AddProblem extends Component {
 
     constructor(props) {
         super(props);
         this.state = {
             problemData: {
+                problemId: -1,
                 name: '',
                 difficulty: 'Easy',
                 description: '',
@@ -106,8 +104,9 @@ class AddProblem extends Component {
 
     handleSubmit = (e) => {
         e.preventDefault();
+        console.log(this.state.problemData.problemId)
         if(this.isFormComplete()){
-            Axios.post(backendURL + '/add_problem', {
+            Axios.post(backendURL + '/edit_problem/' + this.state.problemData.problemId, {
                 name: this.state.problemData.name,
                 difficulty: this.state.problemData.difficulty,
                 description: this.state.problemData.description,
@@ -115,13 +114,61 @@ class AddProblem extends Component {
                 reqOutput: this.state.problemData.reqOutput,
                 testCase: this.state.problemData.testCase
             }).then((res) => {
-                swal(res.data);
+                swal('Success');
             }).catch((err) => {
                 swal('warning something go wrong');
             });
         } else {
             swal('Form is incompleted.');
         }
+    }
+
+    handleGetProblem = (e) => {
+        console.log(this.state.problemData.problemId)
+        e.preventDefault();
+        if(this.state.problemData.problemId >= 0)
+            Axios.get(backendURL + '/get_problem/' + this.state.problemData.problemId).then(res => {
+                console.log(res.data);
+                if(res.data !== 'Cant find it, duh')
+                {
+                    this.updateProblem('name', res.data[0].name);
+                    this.updateProblem('difficulty', res.data[0].difficulty);
+                    this.updateProblem('description', res.data[0].description);
+                    this.updateProblem('reqInput', res.data[0].reqInput);
+                    this.updateProblem('reqOutput', res.data[0].reqOutput);
+                    for(let i = 0; i < 10; i++){
+                        this.updateTestCase(i,'input',res.data[0].testCase[i]['input']);
+                        this.updateTestCase(i,'output',res.data[0].testCase[i]['output']); 
+                    }
+                    /*
+                    this.setState({
+                        problemData :{
+                            name: res.data[0].name,
+                            difficulty: res.data[0].difficulty,
+                            description: res.data[0].description,
+                            reqInput: res.data[0].reqInput,
+                            reqOutput: res.data[0].reqOutput,
+                            testCase:[
+                            {input : res.data[0].testCase[0].input, output: res.data[0].testCase[0].output},
+                            {input : res.data[0].testCase[1].input, output: res.data[0].testCase[1].output},
+                            {input : res.data[0].testCase[2].input, output: res.data[0].testCase[2].output},
+                            {input : res.data[0].testCase[3].input, output: res.data[0].testCase[3].output},
+                            {input : res.data[0].testCase[4].input, output: res.data[0].testCase[4].output},
+                            {input : res.data[0].testCase[5].input, output: res.data[0].testCase[5].output},
+                            {input : res.data[0].testCase[6].input, output: res.data[0].testCase[6].output},
+                            {input : res.data[0].testCase[7].input, output: res.data[0].testCase[7].output},
+                            {input : res.data[0].testCase[8].input, output: res.data[0].testCase[8].output},
+                            {input : res.data[0].testCase[9].input, output: res.data[0].testCase[9].output}
+                            ]
+                        }
+                    })*/
+                }
+                else{
+                    swal(res.data);
+                }
+            }).catch( (err) => {
+                console.log('err: get '+ this.state.problemData.problemId +' problem');
+            });
     }
 
     changeDifficulty(e){
@@ -159,6 +206,15 @@ class AddProblem extends Component {
         return (
             <div>
                 <div className="container-fluid" >
+                    <div style={divStyleHeightLine} />
+                    <div className="row">
+                        <div className="col-8">
+                            <input type="text" value={this.state.problemData.problemId} onChange={(e) => this.updateProblem('problemId', e.target.value)} class="form-control" placeholder="Problem ID"/>
+                        </div>
+                        <div className="col-4">
+                            <Button color="success" onClick={this.handleGetProblem} size="lg" block>Get</Button>
+                        </div>
+                    </div>
                     <div style={divStyleHeightLine} />
                     <div className="row">
                             <div className="col-8">

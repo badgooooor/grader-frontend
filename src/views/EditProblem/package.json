@@ -1,0 +1,6 @@
+{
+  "name": "EditProblem",
+  "version": "0.0.0",
+  "private": true,
+  "main": "./EditProblem.js"
+}

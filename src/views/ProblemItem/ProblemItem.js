@@ -228,6 +228,7 @@ class ProblemItem extends Component {
                         this.state.mockLog[0] = res.data['logData'][res.data['logData'].length - 1];
                         console.log(this.state.mockLog);
                         Axios.get(backendURL + '/get_user/' + this.decryptPlainText(localStorage.getItem('U2FsdGVkX1+mSZ68YZV2YQ9pMNgBL/UQj1YOjaAxZn0='))).then(res => {
+                            console.log();
                             console.log(res.data[0]["problemSolved"]);
                             let problemJustSolved = res.data[0]["problemSolved"];
                             const findProblem = problemJustSolved.find( detail => detail.id === this.state.problem['problemId']);
@@ -274,8 +275,7 @@ class ProblemItem extends Component {
                                 this.setState({loading: false});
                                 return []
                             });
-
-                            Axios.post(backendURL + '/update_user/' + this.decryptPlainText(localStorage.getItem('U2FsdGVkX1+mSZ68YZV2YQ9pMNgBL/UQj1YOjaAxZn0=')), {
+                            Axios.post(backendURL + '/update_user/' + res.data[0]['username'], {
                                 problemSolved: problemJustSolved
                                 }).then((res) => {
                                     console.log(res.data);

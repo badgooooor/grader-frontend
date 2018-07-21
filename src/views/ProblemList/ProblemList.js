@@ -5,11 +5,11 @@ import Axios from 'axios';
 const backendURL = "http://127.0.0.1:3333";
 
 let mockUpData = [
-    //{ problemId: 1, name: 'A+B', difficulty: 'Easy', passedCount: 143 },
-    //{ problemId: 2, name: 'Recursive', difficulty: 'Hard', passedCount: 12 },
-    //{ problemId: 3, name: 'A^B', difficulty: 'Medium', passedCount: 45 },
-    //{ problemId: 4, name: 'Grading', difficulty: 'Easy', passedCount: 73 },
-    //{ problemId: 5, name: 'SmartCamp', difficulty: 'Hard', passedCount: 121 },
+    { problemId: 0, name: '', difficulty: '', passedCount: '' },
+    { problemId: 1, name: '', difficulty: '', passedCount: '' },
+    { problemId: 2, name: '', difficulty: '', passedCount: '' },
+    { problemId: 3, name: '', difficulty: '', passedCount: '' },
+    { problemId: 4, name: '', difficulty: '', passedCount: '' },
 ]
 
 const divStyleHeightLine = {
@@ -59,9 +59,13 @@ class ProblemItemButton extends Component {
 }
 class ProblemList extends Component {
 
-    state = {
-        query: ''
-    }
+    constructor(props) {
+        super(props);
+        this.state = {
+            query: ''
+        }
+        this.update();
+    }    
 
     searchData = mockUpData;
 
@@ -85,6 +89,7 @@ class ProblemList extends Component {
         console.log(this.state.query);
         this.currentProblem();
     }
+
     handleInputChange = () => {
         this.setState({
             query: this.SearchBar.value
@@ -95,17 +100,14 @@ class ProblemList extends Component {
     update(){
         Axios.get(backendURL + '/list_problem/').then(res => {
             mockUpData = res.data['problems'];
-            this.setState({
-                query: this.SearchBar.value
-            })
             this.currentProblem();
+            this.setState({});
         }).catch( (err) => {
             console.log('err: listing problem');
         });
     }
 
     render() {
-        this.update()
         return (
             <div>
                 <div className="container-fluid bd-content" >

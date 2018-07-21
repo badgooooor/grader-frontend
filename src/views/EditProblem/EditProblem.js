@@ -13,34 +13,6 @@ const divStyleHeight = {
     height: '160px'
 };
 
-class Testcase extends Component {
-
-    updateInput() {
-        this.props.problem['input'] = 'a';
-        console.log(this.props.problem['input']);
-    }
-
-    updateOutput(key, value) {
-        this.setState((prev) => {
-            prev.problemData[key] = value;
-            return prev;
-        })
-    }
-
-    render() {
-        return (
-            <div className="row">
-                <div className="col-6">
-                    <input type="text" value={''} onChange={(e) => this.updateInput()} class="form-control" placeholder="Input"/>  
-                </div>
-                <div className="col-6">
-                    <input type="text" value={''} onChange={(e) => this.updateProblem('name', e.target.value)} class="form-control" placeholder="Output"/>  
-                </div>
-            </div>
-        );
-    }
-}
-
 class AddProblem extends Component {
 
     constructor(props) {
@@ -140,28 +112,6 @@ class AddProblem extends Component {
                         this.updateTestCase(i,'input',res.data[0].testCase[i]['input']);
                         this.updateTestCase(i,'output',res.data[0].testCase[i]['output']); 
                     }
-                    /*
-                    this.setState({
-                        problemData :{
-                            name: res.data[0].name,
-                            difficulty: res.data[0].difficulty,
-                            description: res.data[0].description,
-                            reqInput: res.data[0].reqInput,
-                            reqOutput: res.data[0].reqOutput,
-                            testCase:[
-                            {input : res.data[0].testCase[0].input, output: res.data[0].testCase[0].output},
-                            {input : res.data[0].testCase[1].input, output: res.data[0].testCase[1].output},
-                            {input : res.data[0].testCase[2].input, output: res.data[0].testCase[2].output},
-                            {input : res.data[0].testCase[3].input, output: res.data[0].testCase[3].output},
-                            {input : res.data[0].testCase[4].input, output: res.data[0].testCase[4].output},
-                            {input : res.data[0].testCase[5].input, output: res.data[0].testCase[5].output},
-                            {input : res.data[0].testCase[6].input, output: res.data[0].testCase[6].output},
-                            {input : res.data[0].testCase[7].input, output: res.data[0].testCase[7].output},
-                            {input : res.data[0].testCase[8].input, output: res.data[0].testCase[8].output},
-                            {input : res.data[0].testCase[9].input, output: res.data[0].testCase[9].output}
-                            ]
-                        }
-                    })*/
                 }
                 else{
                     swal(res.data);
@@ -242,10 +192,10 @@ class AddProblem extends Component {
                     <div style={divStyleHeightLine} />
                     <div className="row">
                         <div className="col-6">
-                            <input type="text" value={this.state.problemData.reqInput} onChange={(e) => this.updateProblem('reqInput', e.target.value)} class="form-control" placeholder="Input explain:"/>
+                            <textarea type="form-control" value={this.state.problemData.reqInput} onChange={(e) => this.updateProblem('reqInput', e.target.value)} class="form-control" placeholder="Input explain:"/>
                         </div>
                         <div className="col-6">
-                        <input type="text" value={this.state.problemData.reqOutput} onChange={(e) => this.updateProblem('reqOutput', e.target.value)} class="form-control" placeholder="Output explian:"/>
+                        <textarea type="form-control" value={this.state.problemData.reqOutput} onChange={(e) => this.updateProblem('reqOutput', e.target.value)} class="form-control" placeholder="Output explian:"/>
                         </div> 
                     </div>
                     <div style={divStyleHeightLine}>

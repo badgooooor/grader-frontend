@@ -43,8 +43,10 @@ class DetailsCard extends Component {
                 </div>
                 <div className="card-body">
                     <p>{this.props.problem['description']}</p>
-                    <p>Input  : {this.props.problem['reqInput']}</p>
-                    <p>Output : {this.props.problem['reqOutput']}</p>
+                    <p>Input</p>
+                    <pre>{this.props.problem['reqInput']}</pre>
+                    <p>Output</p>
+                    <pre>{this.props.problem['reqOutput']}</pre>
                 </div>
             </div>
         );

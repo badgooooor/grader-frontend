@@ -99,7 +99,8 @@ class ProblemList extends Component {
     
     update(){
         Axios.get(backendURL + '/list_problem/').then(res => {
-            mockUpData = res.data['problems'];
+            mockUpData = res.data['problems'].sort(function(a,b){return a.problemId - b.problemId});
+            console.log(mockUpData);
             this.currentProblem();
             this.setState({});
         }).catch( (err) => {

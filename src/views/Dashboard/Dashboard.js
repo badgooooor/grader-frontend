@@ -12,19 +12,14 @@ var mockUser = {
     username: '',
     problemSolved: [ ],
 }
-const submitCount = {
 
-}
 // Get only user's submission.
 let mockLog = [
-    { },
-    { },
-    { },
-    { },
-    { },
-    //{ submitId: 0, time: 0, user: '', problemId: 0, result: '' }
-    //{ submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '2', result: 'Compile' },
-    //{ submitId: '12345', time: '18:19 18/06/60', user: 'bier', problemId: '2', result: 'PPPPP' },
+    { "submitTime": "", "sender": "", "submitProblem": 0, "result": "", "processTime": 0, "processMemory": 0, "submitId": 0 },
+    { "submitTime": "", "sender": "", "submitProblem": 0, "result": "", "processTime": 0, "processMemory": 0, "submitId": 0 },
+    { "submitTime": "", "sender": "", "submitProblem": 0, "result": "", "processTime": 0, "processMemory": 0, "submitId": 0 },
+    { "submitTime": "", "sender": "", "submitProblem": 0, "result": "", "processTime": 0, "processMemory": 0, "submitId": 0 },
+    { "submitTime": "", "sender": "", "submitProblem": 0, "result": "", "processTime": 0, "processMemory": 0, "submitId": 0 },
 ]
 
 // Data + style in charts.
@@ -279,32 +274,22 @@ class LogElement extends Component {
 }
 class SubmitTable extends Component {
 
-    state = {
-        log : mockLog
-    }
-
-    componentDidMount() {
-        this.timer = setInterval(
-          () => this.update(),
-          2000
-        )
-    }
-    
-    componentWillUnmount() {
-        clearInterval(this.timer)
+    constructor(props){
+        super(props)
+        this.state = {
+            log : mockLog
+        }
+        this.update()
     }
 
     update(){
         this.setState({
-            log: Object.assign({}, this.state.log, {
-                log : mockLog
-            })
+            log : mockLog
         });
     }
 
 
     render() {
-        console.log(mockLog);
         return (
             <div className="card" >
                 <div className="card-header">
@@ -357,24 +342,6 @@ class RankTable extends Component {
         }
     }
 
-    componentDidMount() {
-        this.timer = setInterval(
-          () => this.update(),
-          2000
-        )
-    }
-    
-    componentWillUnmount() {
-        clearInterval(this.timer)
-    }
-
-    update(){
-        this.setState({
-            update : true,
-            rankList : this.showUserList()
-        });
-    }
-
     checkScore(problemSolved){
         console.log(problemSolved);
         let countPassed = 0;
@@ -400,7 +367,10 @@ class RankTable extends Component {
             })
             if(tempUser.length >= 5)userList = tempUser.slice(1,6);
             else userList = tempUser;
-            console.log(userList)
+            this.setState({
+                update : true,
+                rankList : this.showUserList()
+            })
         }).catch( (err) => {
                 console.log('err: listing user');
         });
@@ -440,22 +410,15 @@ class RankTable extends Component {
 }
 
 class Dashboard extends Component {
-    state = {
-        recentlyData: lineDataStyle,
-        barData: barDataStyle,
-    }
-
-    componentDidMount() {
-        this.timer = setInterval(
-          () => this.update(),
-          5000
-        )
+    constructor(props){
+        super(props)
+        this.state = {
+            recentlyData: lineDataStyle,
+            barData: barDataStyle,
+        }
+        this.update();
     }
     
-    componentWillUnmount() {
-        clearInterval(this.timer)
-    }
-
     decryptPlainText(text){
         return CryptoJS.AES.decrypt(text,'secret key 123nbt').toString(CryptoJS.enc.Utf8)
     }
@@ -478,7 +441,7 @@ class Dashboard extends Component {
                     mockLog[j] =  tempMockLog[i];
                     j++;
                 }
-                console.log(mockLog);
+                this.setState({});
             }).catch( (err) => {
                     console.log('err: listing Log');
             });
@@ -489,7 +452,6 @@ class Dashboard extends Component {
     }
 
     render() {
-        this.update();
         return (
             <div>
                 <div className="container-fluid" >

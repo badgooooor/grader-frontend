@@ -73,11 +73,9 @@ var donutData = {
 
 }
 
-let problems ={
-    "problems": [
+let problems =[
         {"name": "", "difficulty": "", "passedCount": 0, "problemId": 0}
     ]
-}
 
 let userList = [];
 
@@ -120,7 +118,7 @@ class UserCard extends Component {
         this.state.user.problemSolved.map((problem) => {
             if (problem.solved) passCount++;
         })
-        let failedCount = problems['problems'].length - passCount;
+        let failedCount = problems.length - passCount;
         let tempData = [failedCount, passCount];
         this.state.douData.datasets[0].data = tempData;
     }
@@ -168,9 +166,9 @@ class SubmissionCard extends Component{
         let allLabel = [];
 
         if(problems != null)
-            for(let id = 0; id < problems['problems'].length; id++){
+            for(let id = 0; id < problems.length; id++){
                 allLabel.push(id.toString());
-                allPassedCount.push(problems['problems'][id]['passedCount']);
+                allPassedCount.push(problems[id]['passedCount']);
                 
             }
         this.setState({
@@ -259,7 +257,7 @@ class LogElement extends Component {
     }
     showProblemName=(e)=>{
         if(!isNullOrUndefined(this.props.problemId))
-            return problems['problems'][this.props.problemId]['name']
+            return problems[this.props.problemId]['name']
     }
     render() {
         return (
@@ -431,7 +429,7 @@ class Dashboard extends Component {
                 console.log('err: listing problem');
         });
         Axios.get(backendURL + '/list_problem/').then(res => {
-            problems = res.data;
+            problems = res.data['problems'].sort(function(a,b){return a.problemId - b.problemId});
             console.log(problems);
             Axios.get(backendURL + '/list_user_submit/'+ mockUser['username']).then(res => {
                 let tempMockLog = res.data['logData'];

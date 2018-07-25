@@ -2,7 +2,22 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import Axios from 'axios';
 
+var CryptoJS = require("crypto-js");
+
 const backendURL = "http://127.0.0.1:3333";
+
+let mockUser = {
+    "username": "",
+    "problemSolved": [
+        {
+            "id": 0,
+            "solved": false,
+            "solveCount": 0
+        }
+    ]
+}
+
+let passedProblem = [];
 
 let mockUpData = [
     { problemId: 0, name: '', difficulty: '', passedCount: '' },
@@ -21,10 +36,16 @@ class ProblemItemButton extends Component {
         super(props);
         
     }
+    componentWillReceiveProps(nextProps){
+        
+    }
     render() {
         const difficulty = this.props.difficulty;
+        let color = "";
+        console.log(passedProblem   );
+        if(passedProblem[this.props.id]) color = "table-success";
         return (
-            <tr> 
+            <tr class={color}> 
             <td>
                 <Link to={{ pathname: '/problems/' + this.props.id , state : this.props}}>
                     <div>
@@ -96,16 +117,40 @@ class ProblemList extends Component {
         })
         this.currentProblem();
     }
+
+    decryptPlainText(text){
+        return CryptoJS.AES.decrypt(text,'secret key 123nbt').toString(CryptoJS.enc.Utf8)
+    }
     
     update(){
         Axios.get(backendURL + '/list_problem/').then(res => {
             mockUpData = res.data['problems'].sort(function(a,b){return a.problemId - b.problemId});
-            console.log(mockUpData);
-            this.currentProblem();
-            this.setState({});
+            mockUser['username'] = this.decryptPlainText(localStorage.getItem('U2FsdGVkX1+mSZ68YZV2YQ9pMNgBL/UQj1YOjaAxZn0='));
+            Axios.get(backendURL + '/get_user/' + mockUser['username']).then(res => {
+                let sortedProblemSolved = res.data[0].problemSolved.sort(function(a,b){return a.id -b.id});
+                for(let i = 0,j=0; i <mockUpData.length;i++){
+                    if(j < sortedProblemSolved.length && sortedProblemSolved[j].id == i ){
+                        if(sortedProblemSolved[j].solved){
+                            passedProblem[i] = true;
+                            console.log("change")
+                        }
+                        else{
+                            passedProblem[i] = false;
+                        }
+                        j++;
+                    }
+                    else
+                        passedProblem[i] = false;
+                }
+                this.currentProblem();
+                this.setState({});
+            }).catch( (err) => {
+                    console.log('err: get user');
+            });
         }).catch( (err) => {
             console.log('err: listing problem');
         });
+        
     }
 
     render() {

@@ -17,10 +17,10 @@ class Home extends Component {
                 <Header/>
                 <div className="main">
                     <div className="container-fluid">
-                        <Switch>              
-                            <Route path="/problems" component={Problem}/>
-                            <Route path="/addproblem" component={AddProblem} />
-                            <Route path="/editproblem" component={EditProblem} />              
+                        <Switch>
+                            <Route path="/addproblem" component={AddProblem}/>  
+                            <Route path="/editproblem" component={EditProblem}/>                
+                            <Route path="/problems" component={Problem}/>           
                             <Route path="/" component={Dashboard} />
                             <Redirect from="/" to="/dashboard" /> 
                             

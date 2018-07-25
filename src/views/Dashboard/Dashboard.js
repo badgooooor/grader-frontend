@@ -74,7 +74,7 @@ var donutData = {
 }
 
 let problems =[
-        {"name": "", "difficulty": "", "passedCount": 0, "problemId": 0}
+        {"name": "", "difficulty": "", "passedCount": 0, "problemId": 0, "testCase": [{"input" : '', "output" : ''}]}
     ]
 
 let userList = [];
@@ -125,14 +125,12 @@ class UserCard extends Component {
 
     render() {
         return (
-            <div className="col-sm-6 col-md-5 col-lg-6">
-                <div className="card">
-                    <div className="card-header">
-                        <i className="fa fa-align-justify"></i><b>{this.state.user.username}</b>
-                    </div>
-                    <div className="card-body">
-                        <Doughnut data={this.state.douData} options={{ maintainAspectRatio: false, legend: { position: 'right' } }} width={this.props.width} height={262} />
-                    </div>
+            <div className="card">
+                <div className="card-header">
+                    <i className="fa fa-align-justify"></i><b>{this.state.user.username}</b>
+                </div>
+                <div className="card-body">
+                    <Doughnut data={this.state.douData} options={{ maintainAspectRatio: false, legend: { position: 'right' } }} width={this.props.width} height={262} />
                 </div>
             </div>
         );
@@ -186,15 +184,13 @@ class SubmissionCard extends Component{
     }
 
     render(){
-        return(
-        <div className="col-sm-6 col-md-5 col-lg-6">
-            <div className="card">
-                <div className="card-header">
-                    <i className="fa fa-align-justify"></i><b> {this.state.cardName} </b>
-                </div>
-                <div className="card-body">
-                    <Line data={this.state.lineData} options={{ responsive: true, maintainAspectRatio: false, legend: { position: 'right' } }} width={this.props.width} onChange={this.changeHandler} height={262} />
-                </div>
+        return(        
+        <div className="card">
+            <div className="card-header">
+                <i className="fa fa-align-justify"></i><b> {this.state.cardName} </b>
+            </div>
+            <div className="card-body">
+                <Line data={this.state.lineData} options={{ responsive: true, maintainAspectRatio: false, legend: { position: 'right' } }} width={this.props.width} onChange={this.changeHandler} height={262} />
             </div>
         </div>
         );                  
@@ -227,12 +223,21 @@ class UserSolvedCount extends Component {
             })
         });
 
-        let problemId = []
-        let solveCount = []
+        let problemId = [];
+        let solveCount = [];
         if(this.state.user.problemSolved != null)
+            console.log(this.state.user.problemSolved);
+            this.state.user.problemSolved = this.state.user.problemSolved.sort(function(a,b){return a.id -b.id})
             this.state.user.problemSolved.map((problem) => {
-                problemId.push(problem.id)
-                solveCount.push(problem.solveCount)
+                let allCase = 0;
+                for(let i = 0; i < problems[problem.id].testCase.length; i++){
+                    console.log(problems[problem.id].testCase);
+                    if(problems[problem.id].testCase[i].output === "")break;
+                    allCase++;
+                }
+                console.log(allCase);
+                problemId.push(problem.id);
+                solveCount.push(problem.solveCount*100/allCase);
             })
         this.state.barData.labels = problemId;
         this.state.barData.datasets[0].data = solveCount;
@@ -245,7 +250,7 @@ class UserSolvedCount extends Component {
                     <i className="fa fa-align-justify"></i><b> Personal passed task</b>
                                 </div>
                 <div className="card-body ">
-                    <Bar data={this.state.barData} options={{ maintainAspectRatio: false, legend: { position: 'right' } }} width={this.props.width} height={262} />
+                    <Bar data={this.state.barData} options={{ maintainAspectRatio: false, legend: { position: 'right' }, scales: {yAxes: [{ ticks: { beginAtZero:true }}] }}} width={this.props.width} height={262} />
                 </div>
             </div>
         );
@@ -363,7 +368,7 @@ class RankTable extends Component {
             tempUser.sort(function(a,b){
                 return(-(a.score - b.score));
             })
-            if(tempUser.length >= 5)userList = tempUser.slice(1,6);
+            if(tempUser.length >= 5)userList = tempUser.slice(0,5);
             else userList = tempUser;
             this.setState({
                 update : true,
@@ -455,8 +460,12 @@ class Dashboard extends Component {
                 <div className="container-fluid" >
                     <div style={divStyleHeightLine} />
                     <div className="row ">
-                        <UserCard />
-                        <SubmissionCard />
+                        <div className="col-sm-4 col-md-4 col-lg-4">
+                            <UserCard />
+                        </div> 
+                        <div className="col-sm-8 col-md-8 col-lg-8">
+                            <SubmissionCard />
+                        </div>
                     </div>
                     <div className="row">
                         <div className="col-sm-6 col-md-5 col-lg-6">

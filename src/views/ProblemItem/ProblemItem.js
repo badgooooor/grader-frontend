@@ -32,7 +32,7 @@ class DetailsCard extends Component {
         super(props);
     }
     render() {
-        console.log(this.props.problem);
+        // console.log(this.props.problem);
         return (
             <div className="card">
                 <div className="card-header">
@@ -171,7 +171,7 @@ class ProblemItem extends Component {
     }
     
     uploadfile = (e) => {
-        console.log('test');
+        // console.log('test');
         var input = e.target;
         var reader = new FileReader();
         reader.onload = () => this.setState({
@@ -179,19 +179,20 @@ class ProblemItem extends Component {
         });
         reader.readAsText(input.files[0]);
         reader.onerror = function (error) {
-            console.log('Error: ', error);
+            // console.log('Error: ', error);
         };
         
-        // console.log(files);
+        // // console.log(files);
 
     }
 
     sendTestCase(caseIndex, output){
-        console.log(caseIndex);
+         console.log(caseIndex);
         if((caseIndex < this.state.problem['testCase'].length) && (this.state.problem['testCase'][caseIndex]['output'] !== '')){
-            Axios.post(backendURL + '/judge', {
-                    source: this.state.uploadedCode,
-                    input : this.state.problem['testCase'][caseIndex]['input']
+            Axios.post("http://161.246.34.112:3000/submissions?wait=true", {
+                    language_id: 10,
+                    source_code: this.state.uploadedCode,
+                    stdin : this.state.problem['testCase'][caseIndex]['input']
                 }).then((ms) => {
                     output.push(ms['data']);
                     console.log(caseIndex)
@@ -204,15 +205,19 @@ class ProblemItem extends Component {
                 });
         }
         else{
+            console.log(output);
             this.setState({
                 loading: false
             })
-            console.log(output);
-            console.log(output.length);
+            // console.log(output);
+            // console.log(output.length);
             let caseResult = '';
             for(let i = 0; i < output.length; i++){
-                console.log(output[i]['stdout'] + ' '+ this.state.problem['testCase'][i]['output']);
-                if(output[i]['stdout'] === this.state.problem['testCase'][i]['output']){
+                console.log(output[i]['stdout'] + '\n'+ this.state.problem['testCase'][i]['output']);
+                if(output[i]['stdout'] === null){
+                    caseResult += 'X'
+                }
+                else if((output[i]['stdout'].trim()) === this.state.problem['testCase'][i]['output'].trim()){
                     caseResult += 'P';
                 }
                 else{
@@ -228,10 +233,10 @@ class ProblemItem extends Component {
                 }).then((ms) => {
                     Axios.get(backendURL + '/list_problem_submit/' + this.state.problem['problemId']).then(res => {
                         this.state.mockLog[0] = res.data['logData'][res.data['logData'].length - 1];
-                        console.log(this.state.mockLog);
+                        // console.log(this.state.mockLog);
                         Axios.get(backendURL + '/get_user/' + this.decryptPlainText(localStorage.getItem('U2FsdGVkX1+mSZ68YZV2YQ9pMNgBL/UQj1YOjaAxZn0='))).then(res => {
-                            console.log();
-                            console.log(res.data[0]["problemSolved"]);
+                            // console.log();
+                            // console.log(res.data[0]["problemSolved"]);
                             let problemJustSolved = res.data[0]["problemSolved"];
                             const findProblem = problemJustSolved.find( detail => detail.id === this.state.problem['problemId']);
                             let passedCount = 0;
@@ -250,9 +255,9 @@ class ProblemItem extends Component {
                             }
                             //History User
                             else{
-                                console.log(passedCount === caseResult.length)
-                                console.log(problemJustSolved[problemJustSolved.indexOf(findProblem)]['solved']);
-                                console.log()
+                                // console.log(passedCount === caseResult.length)
+                                // console.log(problemJustSolved[problemJustSolved.indexOf(findProblem)]['solved']);
+                                // console.log()
                                 //This time passed
                                 if((passedCount === caseResult.length) && !problemJustSolved[problemJustSolved.indexOf(findProblem)]['solved']){
                                     addCount = 1;
@@ -271,7 +276,7 @@ class ProblemItem extends Component {
                             Axios.post(backendURL + '/update_problem/' + this.state.problem['problemId'], {
                                 passedCount : (this.state.problem['passedCount'] + addCount)
                             }).then(res =>{    
-                                console.log(res)
+                                // console.log(res)
                             }).catch((err) => {
                                 swal("Update problem failed!", "error");
                                 this.setState({loading: false});
@@ -280,7 +285,7 @@ class ProblemItem extends Component {
                             Axios.post(backendURL + '/update_user/' + res.data[0]['username'], {
                                 problemSolved: problemJustSolved
                                 }).then((res) => {
-                                    console.log(res.data);
+                                    // console.log(res.data);
                                     swal("Upload success!", "success"); 
                                 }).catch((err) => {
                                     swal("Update user failed!", "error");
@@ -288,10 +293,10 @@ class ProblemItem extends Component {
                                     return []
                                 });
                         }).catch( (err) => {
-                            console.log('err: get user');
+                            // console.log('err: get user');
                         });
                     }).catch( (err) => {
-                        console.log('err: get listing submited log');
+                        // console.log('err: get listing submited log');
                     });
                 }).catch((ms) => {
                     swal("Submit failed!", "error");
@@ -323,7 +328,7 @@ class ProblemItem extends Component {
             problemCases = this.state.problem['testCase'];
             this.setState({});
         }).catch( (err) => {
-            console.log('err: get '+ this.props.location.state['id'] +' problem');
+            // console.log('err: get '+ this.props.location.state['id'] +' problem');
         });
     }
 

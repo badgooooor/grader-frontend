@@ -1,5 +1,6 @@
 This is "Grader Website" project that built for Freshmen years in CE BOOST UP 6 Camp. Technically our first works that is a real website that we created, so there is some bugs/vulnerabilities in this website.
 
+Feel free for forking and contributing our works.
 
 ## Current Features
 - Judge and result logs.
